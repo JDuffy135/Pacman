@@ -16,16 +16,23 @@ public class GamePanel extends JPanel implements Runnable
     final int screenWidth = displayedTileSize * horizontalTileCount; //448 pixels
     final int screenHeight = displayedTileSize * verticalTileCount; //576 pixels
 
-    //initialization
+    //INITIALIZATION
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     Pacman pacman = new Pacman(this, keyH);
 
-    //global constants
+    //FPS
     final int FPS = 60;
 
-    //TEMPORARY/TESTING VARIABLES
-    //...
+    //SYSTEM
+    public UI ui = new UI(this);
+
+    //GAME STATE
+    public int gameState;
+    public final int menuState = 0;
+    public final int playState = 1;
+
+
 
 
     public GamePanel()
@@ -67,27 +74,37 @@ public class GamePanel extends JPanel implements Runnable
                 ////calls paintComponent to update the screen based on updated sprite values
                 repaint();
 
-
                 //resets game loop at end of each execution
                 delta--;
             }
         }
     }
 
-
+    //updates sprites
     public void update()
     {
         pacman.updatePosition();
     }
 
     @Override
-    public void paintComponent(Graphics g) //updates screen
+    public void paintComponent(Graphics g) //updates screen and images
     {
         super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D)g; //convert to Graphics2D object so that we can use 2D graphics methods
+        Graphics2D g2 = (Graphics2D)g; //converts g to a Graphics2D object so that we can use 2D graphics methods
 
+
+        //MENU SCREEN
         //...
+
+        //GAME BOARD
+        ui.draw(g2);
+
+        //PLAYER
         pacman.draw(g2);
+
+        //GHOSTS
+        //...
+
 
         g2.dispose();
     }

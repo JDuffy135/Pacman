@@ -12,6 +12,7 @@ public class Pacman extends Entity
     GamePanel gp;
     KeyHandler keyH;
     public String lastDirection = "right";
+    BufferedImage image;
 
     //Pacman constructor
     public Pacman(GamePanel gp, KeyHandler keyH)
@@ -24,9 +25,9 @@ public class Pacman extends Entity
 
     public void setDefaultPacmanValues()
     {
-        x = 64;
-        y = 64;
-        speed = 4;
+        x = 212;
+        y = 404;
+        speed = 2;
         direction = "right";
         lastDirection = "right";
     }
@@ -98,7 +99,7 @@ public class Pacman extends Entity
 
     public void draw(Graphics2D g2)
     {
-        BufferedImage image = null;
+        image = null;
 
         switch(direction)
         {
@@ -145,6 +146,6 @@ public class Pacman extends Entity
                 }
         }
 
-        g2.drawImage(image, x, y, gp.displayedTileSize * 2, gp.displayedTileSize * 2, null);
+        g2.drawImage(image, x, y, gp.displayedTileSize + 8, gp.displayedTileSize + 8, null);
     }
 }
