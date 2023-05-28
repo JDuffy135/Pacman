@@ -21,6 +21,9 @@ public class Pacman extends Entity
         this.keyH = keyH;
         setDefaultPacmanValues();
         getPacmanImage();
+
+        pacmanHitbox = new Rectangle(x + 2, y + 2, gp.displayedTileSize + 2, gp.displayedTileSize + 2);
+
     }
 
     public void setDefaultPacmanValues()
@@ -50,36 +53,43 @@ public class Pacman extends Entity
         }
     }
 
-    public void updatePosition()
+    public void update()
     {
+        //moves according to key pressed
         if (keyH.upPressed == true)
         {
             direction = "up";
             lastDirection = "up";
-            y -= speed;
+            if (collisionOn == false) { y -= speed; }
         }
         else if (keyH.downPressed == true)
         {
             direction = "down";
             lastDirection = "down";
-            y += speed;
+            if (collisionOn == false) { y += speed; }
         }
         else if (keyH.leftPressed == true)
         {
             direction = "left";
             lastDirection = "left";
-            x -= speed;
+            if (collisionOn == false) { x -= speed; }
         }
         else if (keyH.rightPressed == true)
         {
             direction = "right";
             lastDirection = "right";
-            x += speed;
+            if (collisionOn == false) { x += speed; }
         }
         else
         {
            direction = "stationary";
         }
+
+
+        //collision detection
+        collisionOn = false;
+        gp.cHandler.checkCollision(this);
+
 
         //adjusts global sprite timer (spriteCounter) for sprite animations
         spriteCounter++;
@@ -147,5 +157,8 @@ public class Pacman extends Entity
         }
 
         g2.drawImage(image, x, y, gp.displayedTileSize + 8, gp.displayedTileSize + 8, null);
+
+        //hitbox visualizer
+        g2.draw3DRect(x + 2, y + 2, gp.displayedTileSize + 2, gp.displayedTileSize + 2, true);
     }
 }

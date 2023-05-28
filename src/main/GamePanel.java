@@ -3,6 +3,7 @@ package main;
 import javax.swing.JPanel;
 import java.awt.*;
 import entity.Pacman;
+import entity.Spawner;
 
 public class GamePanel extends JPanel implements Runnable
 {
@@ -16,23 +17,23 @@ public class GamePanel extends JPanel implements Runnable
     final int screenWidth = displayedTileSize * horizontalTileCount; //448 pixels
     final int screenHeight = displayedTileSize * verticalTileCount; //576 pixels
 
-    //INITIALIZATION
+    //SYSTEM
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
-    Pacman pacman = new Pacman(this, keyH);
+    public UI ui = new UI(this);
+    public CollisionHandler cHandler = new CollisionHandler(this);
+    Spawner wallSpawner = new Spawner(this);
 
     //FPS
     final int FPS = 60;
 
-    //SYSTEM
-    public UI ui = new UI(this);
+    //SPRITES
+    Pacman pacman = new Pacman(this, keyH);
 
     //GAME STATE
     public int gameState;
     public final int menuState = 0;
     public final int playState = 1;
-
-
 
 
     public GamePanel()
@@ -83,7 +84,7 @@ public class GamePanel extends JPanel implements Runnable
     //updates sprites
     public void update()
     {
-        pacman.updatePosition();
+        pacman.update();
     }
 
     @Override
@@ -98,6 +99,7 @@ public class GamePanel extends JPanel implements Runnable
 
         //GAME BOARD
         ui.draw(g2);
+        wallSpawner.createWalls(g2);
 
         //PLAYER
         pacman.draw(g2);
