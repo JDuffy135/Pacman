@@ -19,18 +19,22 @@ public class Pacman extends Entity
     {
         this.gp = gp;
         this.keyH = keyH;
+        x = 0;
+        y = 0;
+        speed = 0;
+        collisionOn = false;
+
         setDefaultPacmanValues();
         getPacmanImage();
-
-        pacmanHitbox = new Rectangle(x + 2, y + 2, gp.displayedTileSize + 2, gp.displayedTileSize + 2);
+        //hitbox = new Rectangle(x + 2, y + 2, gp.displayedTileSize + 2, gp.displayedTileSize + 2);
 
     }
 
     public void setDefaultPacmanValues()
     {
-        x = 212;
-        y = 404;
-        speed = 2;
+        this.x = 212;
+        this.y = 404;
+        this.speed = 2;
         direction = "right";
         lastDirection = "right";
     }
@@ -60,25 +64,37 @@ public class Pacman extends Entity
         {
             direction = "up";
             lastDirection = "up";
-            if (collisionOn == false) { y -= speed; }
+            if (this.collisionOn == false)
+            {
+                this.y -= speed;
+            }
         }
         else if (keyH.downPressed == true)
         {
             direction = "down";
             lastDirection = "down";
-            if (collisionOn == false) { y += speed; }
+            if (this.collisionOn == false)
+            {
+                this.y += speed;
+            }
         }
         else if (keyH.leftPressed == true)
         {
             direction = "left";
             lastDirection = "left";
-            if (collisionOn == false) { x -= speed; }
+            if (this.collisionOn == false)
+            {
+                this.x -= speed;
+            }
         }
         else if (keyH.rightPressed == true)
         {
             direction = "right";
             lastDirection = "right";
-            if (collisionOn == false) { x += speed; }
+            if (this.collisionOn == false)
+            {
+                this.x += speed;
+            }
         }
         else
         {
@@ -88,7 +104,7 @@ public class Pacman extends Entity
 
         //collision detection
         collisionOn = false;
-        gp.cHandler.checkCollision(this);
+        gp.cHandler.checkWallCollision(this);
 
 
         //adjusts global sprite timer (spriteCounter) for sprite animations
@@ -158,7 +174,7 @@ public class Pacman extends Entity
 
         g2.drawImage(image, x, y, gp.displayedTileSize + 8, gp.displayedTileSize + 8, null);
 
-        //hitbox visualizer
-        g2.draw3DRect(x + 2, y + 2, gp.displayedTileSize + 2, gp.displayedTileSize + 2, true);
+        //hitbox visualizer - delete eventually
+        //g2.draw3DRect(x + 2, y + 2, gp.displayedTileSize + 2, gp.displayedTileSize + 2, true);
     }
 }

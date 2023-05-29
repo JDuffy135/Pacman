@@ -2,20 +2,23 @@ package entity;
 
 import java.awt.image.BufferedImage;
 import java.awt.Rectangle;
-import main.GamePanel;
+import java.util.ArrayList;
 
 //MASTER CLASS FOR ALL ENTITIES/SPRITES
 public class Entity
 {
-    //PACMAN VARIABLES
+    //PACMAN AND GHOST VARIABLES
+    public final int hitboxOffset = 2;
+    public final int hitboxSize = 18; //same as gp.displayedTileSize + 2
+    public boolean collisionOn;
     public int x, y;
     public int speed;
-    public Rectangle pacmanHitbox;
-    public boolean collisionOn;
-
-    //PACMAN IMAGES
     public BufferedImage up1, up2, down1, down2, right1, right2, left1, left2;
     public String direction;
+
+    //WALL STUFF
+    public Rectangle hitbox;
+    public static ArrayList<Wall> walls = new ArrayList<Wall>(); //static because only one global walls ArrayList
 
     //SPRITE CLOCK FOR ANIMATIONS
     public int spriteCounter = 0;

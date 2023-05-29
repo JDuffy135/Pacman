@@ -2,6 +2,8 @@ package main;
 
 import javax.swing.JPanel;
 import java.awt.*;
+
+import entity.CollisionHandler;
 import entity.Pacman;
 import entity.Spawner;
 
@@ -36,6 +38,10 @@ public class GamePanel extends JPanel implements Runnable
     public final int playState = 1;
 
 
+    //TEMPORARY VARIABLES FOR TESTING
+    boolean flag = false;
+
+
     public GamePanel()
     {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -59,12 +65,15 @@ public class GamePanel extends JPanel implements Runnable
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
+        long timer = 0;
+        int drawCount = 0;
 
         //main game loop
         while (gameThread != null)
         {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
+            timer += (currentTime - lastTime);
             lastTime = currentTime;
 
             if (delta >= 1)
@@ -77,6 +86,15 @@ public class GamePanel extends JPanel implements Runnable
 
                 //resets game loop at end of each execution
                 delta--;
+                drawCount++;
+            }
+
+            //display FPS
+            if (timer >= 1000000000)
+            {
+                //System.out.println("FPS: " + drawCount);
+                drawCount = 0;
+                timer = 0;
             }
         }
     }
@@ -99,10 +117,16 @@ public class GamePanel extends JPanel implements Runnable
 
         //GAME BOARD
         ui.draw(g2);
-        wallSpawner.createWalls(g2);
 
         //PLAYER
         pacman.draw(g2);
+        //wallSpawner.paintWalls(g2);
+        if (flag == false)
+        {
+            //using a flag just because I want this to run once - will eventually fix with game states
+            wallSpawner.createWalls();
+        }
+        flag = true;
 
         //GHOSTS
         //...
