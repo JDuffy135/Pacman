@@ -51,6 +51,6 @@ public class UI
         g2.drawImage(bg, 0, -8, 448, 576, null);
         g2.setFont(primaryFont.deriveFont(20F));
         g2.setColor(Color.white);
-        g2.drawString("GAME SCORE", 164, 28);
+        g2.drawString("GAME SCORE", 162, 28);
     }
 }

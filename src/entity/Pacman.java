@@ -2,10 +2,13 @@ package entity;
 
 import main.GamePanel;
 import main.KeyHandler;
+import main.UtilityTool;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.*;
 
 public class Pacman extends Entity
 {
@@ -26,7 +29,7 @@ public class Pacman extends Entity
 
         setDefaultPacmanValues();
         getPacmanImage();
-        //hitbox = new Rectangle(x + 2, y + 2, gp.displayedTileSize + 2, gp.displayedTileSize + 2);
+        hitbox = new Rectangle(x + 2, y + 2, gp.displayedTileSize + 4, gp.displayedTileSize + 4);
 
     }
 
@@ -41,24 +44,37 @@ public class Pacman extends Entity
 
     public void getPacmanImage()
     {
+        up1 = setupImage("PacmanUpOpen", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        up2 = setupImage("PacmanUpClosed", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        down1 = setupImage("PacmanDownOpen", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        down2 = setupImage("PacmanDownClosed", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        right1 = setupImage("PacmanRightOpen", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        right2 = setupImage("PacmanRightClosed", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        left1 = setupImage("PacmanLeftOpen", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        left2 = setupImage("PacmanLeftClosed", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+    }
+
+    public BufferedImage setupImage(String imageName, int width, int height)
+    {
+        UtilityTool uTool = new UtilityTool();
+        BufferedImage image = null;
         try
         {
-            up1 = ImageIO.read(getClass().getResourceAsStream("/pacman/PacmanUpOpen.png"));
-            up2 = ImageIO.read(getClass().getResourceAsStream("/pacman/PacmanUpClosed.png"));
-            down1 = ImageIO.read(getClass().getResourceAsStream("/pacman/PacmanDownOpen.png"));
-            down2 = ImageIO.read(getClass().getResourceAsStream("/pacman/PacmanDownClosed.png"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("/pacman/PacmanRightOpen.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/pacman/PacmanRightClosed.png"));
-            left1 = ImageIO.read(getClass().getResourceAsStream("/pacman/PacmanLeftOpen.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/pacman/PacmanLeftClosed.png"));
-        } catch(IOException e)
+            image = ImageIO.read(getClass().getResourceAsStream("/pacman/" + imageName + ".png"));
+            image = uTool.scaleImage(image, width, height);
+        }catch(IOException e)
         {
             e.printStackTrace();
         }
+        return image;
     }
 
     public void update()
     {
+        //collision detection
+        this.collisionOn = false;
+        gp.cHandler.checkWallCollision(this);
+
         //moves according to key pressed
         if (keyH.upPressed == true)
         {
@@ -100,11 +116,6 @@ public class Pacman extends Entity
         {
            direction = "stationary";
         }
-
-
-        //collision detection
-        collisionOn = false;
-        gp.cHandler.checkWallCollision(this);
 
 
         //adjusts global sprite timer (spriteCounter) for sprite animations
@@ -172,9 +183,9 @@ public class Pacman extends Entity
                 }
         }
 
-        g2.drawImage(image, x, y, gp.displayedTileSize + 8, gp.displayedTileSize + 8, null);
+        g2.drawImage(image, x, y, null);
 
         //hitbox visualizer - delete eventually
-        //g2.draw3DRect(x + 2, y + 2, gp.displayedTileSize + 2, gp.displayedTileSize + 2, true);
+        g2.draw3DRect(this.hitbox.x, this.hitbox.y, gp.displayedTileSize + 4, gp.displayedTileSize + 4, true);
     }
 }

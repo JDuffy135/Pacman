@@ -1,10 +1,7 @@
 package entity;
 
-import entity.Entity;
-import entity.Wall;
 import main.GamePanel;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class CollisionHandler extends Entity
 {
@@ -26,6 +23,21 @@ public class CollisionHandler extends Entity
 
         Rectangle dHitbox = directionalHitbox(entity, entityLeftX, entityRightX, entityTopY, entityBottomY);
         checkForIntersections(entity, dHitbox);
+
+        if (entity.collisionOn == false)
+        {
+            switch (entity.direction)
+            {
+                case "up":
+                    entity.hitbox.setLocation(entity.x, entity.y - entity.speed);
+                case "down":
+                    entity.hitbox.setLocation(entity.x, entity.y + entity.speed);
+                case "left":
+                    entity.hitbox.setLocation(entity.x - entity.speed, entity.y);
+                case "right":
+                    entity.hitbox.setLocation(entity.x + entity.speed, entity.y);
+            }
+        }
     }
 
     //creates a new hitbox offset by the entity's movement speed in it's current direction
@@ -36,17 +48,16 @@ public class CollisionHandler extends Entity
         switch(entity.direction)
         {
             case "up":
-                return new Rectangle(xLeft, yTop - entity.speed * 3, size, size);
+                return new Rectangle(xLeft, yTop - entity.speed, size, size);
             case "down":
-                return new Rectangle(xLeft, yTop + entity.speed * 3, size, size);
+                return new Rectangle(xLeft, yTop + entity.speed, size, size);
             case "left":
-                return new Rectangle(xLeft - entity.speed * 3, yTop, size, size);
+                return new Rectangle(xLeft - entity.speed, yTop, size, size);
             case "right":
-                return new Rectangle(xLeft + entity.speed * 3, yTop, size, size);
+                return new Rectangle(xLeft + entity.speed, yTop, size, size);
             case "stationary":
                 return new Rectangle(xLeft, yTop, size, size);
         }
-
         return new Rectangle(xLeft, yTop, size, size);
     }
 

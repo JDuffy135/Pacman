@@ -111,6 +111,11 @@ public class GamePanel extends JPanel implements Runnable
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g; //converts g to a Graphics2D object so that we can use 2D graphics methods
 
+        //DEBUG
+        long drawStart = 0;
+        drawStart = System.nanoTime();
+
+
 
         //MENU SCREEN
         //...
@@ -120,7 +125,7 @@ public class GamePanel extends JPanel implements Runnable
 
         //PLAYER
         pacman.draw(g2);
-        //wallSpawner.paintWalls(g2);
+        wallSpawner.paintWalls(g2);
         if (flag == false)
         {
             //using a flag just because I want this to run once - will eventually fix with game states
@@ -131,6 +136,11 @@ public class GamePanel extends JPanel implements Runnable
         //GHOSTS
         //...
 
+
+        //DEBUG CONTINUED
+        long drawEnd = System.nanoTime();
+        long timePassed = drawEnd - drawStart;
+        System.out.println("Draw Time: " + timePassed);
 
         g2.dispose();
     }
