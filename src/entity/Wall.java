@@ -12,6 +12,6 @@ public class Wall extends Entity
         this.gp = gp;
         x = xPos;
         y = yPos;
-        hitbox = new Rectangle(xPos, yPos, 12, 10);
+        hitbox = new Rectangle(xPos, yPos, 14, 14);
     }
 }

@@ -12,7 +12,7 @@ public class CollisionHandler extends Entity
         this.gp = gp;
     }
 
-    //sets collisionOn value to true if entity is touching a wall
+    //sets collisionOn<direction> value to true if a wall is in the path of the given entity
     public void checkWallCollision(Entity entity)
     {
         //finds location of each side of entity's "hitbox"
@@ -21,55 +21,57 @@ public class CollisionHandler extends Entity
         int entityTopY = entity.y + entity.hitboxOffset;
         int entityBottomY = entityTopY + entity.hitboxSize;
 
-        Rectangle dHitbox = directionalHitbox(entity, entityLeftX, entityRightX, entityTopY, entityBottomY);
-        checkForIntersections(entity, dHitbox);
-
-        if (entity.collisionOn == false)
-        {
-            switch (entity.direction)
-            {
-                case "up":
-                    entity.hitbox.setLocation(entity.x, entity.y - entity.speed);
-                case "down":
-                    entity.hitbox.setLocation(entity.x, entity.y + entity.speed);
-                case "left":
-                    entity.hitbox.setLocation(entity.x - entity.speed, entity.y);
-                case "right":
-                    entity.hitbox.setLocation(entity.x + entity.speed, entity.y);
-            }
-        }
+        //creates a temporary hitbox offset in the direction of key pressed to check if entity can move there
+        directionalHitbox(entity, entityLeftX, entityTopY);
     }
 
     //creates a new hitbox offset by the entity's movement speed in it's current direction
-    public Rectangle directionalHitbox(Entity entity, int xLeft, int xRight, int yTop, int yBot)
+    public void directionalHitbox(Entity entity, int xLeft, int yTop)
     {
         int size = entity.hitboxSize;
+        Rectangle rect;
 
         switch(entity.direction)
         {
             case "up":
-                return new Rectangle(xLeft, yTop - entity.speed, size, size);
+                rect = new Rectangle(entity.hitbox.x, entity.hitbox.y - entity.speed, size, size);
+                checkForIntersections(entity, rect,1);
             case "down":
-                return new Rectangle(xLeft, yTop + entity.speed, size, size);
+                rect = new Rectangle(entity.hitbox.x, entity.hitbox.y + entity.speed, size, size);
+                checkForIntersections(entity, rect,2);
             case "left":
-                return new Rectangle(xLeft - entity.speed, yTop, size, size);
+                rect = new Rectangle(entity.hitbox.x - entity.speed, entity.hitbox.y, size, size);
+                checkForIntersections(entity, rect,3);
             case "right":
-                return new Rectangle(xLeft + entity.speed, yTop, size, size);
-            case "stationary":
-                return new Rectangle(xLeft, yTop, size, size);
+                rect = new Rectangle(entity.hitbox.x + entity.speed, entity.hitbox.y, size, size);
+                checkForIntersections(entity, rect,4);
         }
-        return new Rectangle(xLeft, yTop, size, size);
     }
 
     //loops through all the wall objects and checks if any wall hitbox intersects with the directional hitbox
     //sets collisionOn to true if an intersection is found
-    public void checkForIntersections(Entity entity, Rectangle dHitbox)
+    public void checkForIntersections(Entity entity, Rectangle dHitbox, int dir)
     {
         for (Wall w : walls)
         {
             if (w.hitbox.intersects(dHitbox) == true)
             {
-                entity.collisionOn = true;
+                if (dir == 1)
+                {
+                    entity.collisionOnUp = true;
+                }
+                else if (dir == 2)
+                {
+                    entity.collisionOnDown = true;
+                }
+                else if (dir == 3)
+                {
+                    entity.collisionOnLeft = true;
+                }
+                else if (dir == 4)
+                {
+                    entity.collisionOnRight = true;
+                }
                 break;
             }
         }

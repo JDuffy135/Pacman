@@ -125,7 +125,7 @@ public class GamePanel extends JPanel implements Runnable
 
         //PLAYER
         pacman.draw(g2);
-        wallSpawner.paintWalls(g2);
+        //wallSpawner.paintWalls(g2);
         if (flag == false)
         {
             //using a flag just because I want this to run once - will eventually fix with game states

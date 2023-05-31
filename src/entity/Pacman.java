@@ -25,7 +25,10 @@ public class Pacman extends Entity
         x = 0;
         y = 0;
         speed = 0;
-        collisionOn = false;
+        collisionOnUp = false;
+        collisionOnDown = false;
+        collisionOnLeft = false;
+        collisionOnRight = false;
 
         setDefaultPacmanValues();
         getPacmanImage();
@@ -69,53 +72,47 @@ public class Pacman extends Entity
         return image;
     }
 
-    public void update()
+    public void changeDirection()
     {
-        //collision detection
-        this.collisionOn = false;
-        gp.cHandler.checkWallCollision(this);
-
         //moves according to key pressed
-        if (keyH.upPressed == true)
+        if (this.keyH.upPressed == true)
         {
-            direction = "up";
-            lastDirection = "up";
-            if (this.collisionOn == false)
-            {
-                this.y -= speed;
-            }
+            this.direction = "up";
+            this.lastDirection = "up";
         }
-        else if (keyH.downPressed == true)
+        else if (this.keyH.downPressed == true)
         {
-            direction = "down";
-            lastDirection = "down";
-            if (this.collisionOn == false)
-            {
-                this.y += speed;
-            }
+            this.direction = "down";
+            this.lastDirection = "down";
         }
-        else if (keyH.leftPressed == true)
+        else if (this.keyH.leftPressed == true)
         {
-            direction = "left";
-            lastDirection = "left";
-            if (this.collisionOn == false)
-            {
-                this.x -= speed;
-            }
+            this.direction = "left";
+            this.lastDirection = "left";
         }
-        else if (keyH.rightPressed == true)
+        else if (this.keyH.rightPressed == true)
         {
-            direction = "right";
-            lastDirection = "right";
-            if (this.collisionOn == false)
-            {
-                this.x += speed;
-            }
+            this.direction = "right";
+            this.lastDirection = "right";
         }
         else
         {
-           direction = "stationary";
+            this.direction = "stationary";
         }
+    }
+
+    public void update()
+    {
+        this.collisionOnRight = false;
+        this.collisionOnLeft = false;
+        this.collisionOnUp = false;
+        this.collisionOnDown = false;
+
+        this.changeDirection();
+
+        //collision checking and movement
+        gp.cHandler.checkWallCollision(this);
+        this.move();
 
 
         //adjusts global sprite timer (spriteCounter) for sprite animations
@@ -186,6 +183,6 @@ public class Pacman extends Entity
         g2.drawImage(image, x, y, null);
 
         //hitbox visualizer - delete eventually
-        g2.draw3DRect(this.hitbox.x, this.hitbox.y, gp.displayedTileSize + 4, gp.displayedTileSize + 4, true);
+        //g2.draw3DRect(this.hitbox.x, this.hitbox.y, gp.displayedTileSize + 4, gp.displayedTileSize + 4, true);
     }
 }

@@ -42,7 +42,7 @@ public class Spawner extends Entity
     {
         instantiateGameboardArray(gameboard);
 
-        int xPos = -6, yPos = 38;
+        int xPos = -6, yPos = 33;
         for (int h = 0 ; h < 22 ; h++)
         {
             for (int w = 0 ; w < 19 ; w++)
@@ -52,17 +52,15 @@ public class Spawner extends Entity
                     Wall wall = new Wall(gp, xPos, yPos);
                     walls.add(wall);
                 }
-                if (w == 0 ||w == 4 ||  w == 15 || w == 16 || w == 17) { xPos = xPos + 26; }
-                else if (w == 1) { xPos = xPos + 22; }
-                else if (w == 2) { xPos = xPos + 28; }
+                if (w == 1 || w == 16) { xPos = xPos + 17; }
+                else if (w == 0) { xPos = xPos + 30; }
+                else if (w == 15 || w == 17) { xPos = xPos + 31; }
+                else if (w == 2) { xPos = xPos + 32; }
                 else { xPos = xPos + 24; }
             }
-            xPos = -4;
-            if (h == 0) {yPos = yPos + 18; }
-            else if (h == 2 || h ==10 ) { yPos = yPos + 21; }
-            else if (h == 7 || h == 9 || h == 12 ) { yPos = yPos + 27; }
-            else if (h == 16 || h == 18) { yPos = yPos + 25; }
-            else { yPos = yPos + 23; }
+            xPos = -6;
+            if (h == 2) { yPos = yPos + 15; }
+            else { yPos = yPos + 24; }
         }
     }
 
@@ -71,7 +69,7 @@ public class Spawner extends Entity
     {
         instantiateGameboardArray(gameboard);
 
-        int xPos = -6, yPos = 38;
+        int xPos = -6, yPos = 33;
         for (int h = 0 ; h < 22 ; h++)
         {
             for (int w = 0 ; w < 19 ; w++)
@@ -79,19 +77,17 @@ public class Spawner extends Entity
                 if (gameboard[w][h] == 1)
                 {
                     //NOTE: replace these drawings with 10x10 Wall objects
-                    g2.draw3DRect(xPos, yPos, 12, 10, false);
+                    g2.draw3DRect(xPos, yPos, 14, 14, false);
                 }
-                if (w == 0 ||w == 4 ||  w == 15 || w == 16 || w == 17) { xPos = xPos + 26; }
-                else if (w == 1) { xPos = xPos + 22; }
-                else if (w == 2) { xPos = xPos + 28; }
+                if (w == 1 || w == 16) { xPos = xPos + 17; }
+                else if (w == 0) { xPos = xPos + 30; }
+                else if (w == 15 || w == 17) { xPos = xPos + 31; }
+                else if (w == 2) { xPos = xPos + 32; }
                 else { xPos = xPos + 24; }
             }
-            xPos = -4;
-            if (h == 0) {yPos = yPos + 18; }
-            else if (h == 2 || h ==10 ) { yPos = yPos + 21; }
-            else if (h == 7 || h == 9 || h == 12 ) { yPos = yPos + 27; }
-            else if (h == 16 || h == 18) { yPos = yPos + 25; }
-            else { yPos = yPos + 23; }
+            xPos = -6;
+            if (h == 2) { yPos = yPos + 15; }
+            else { yPos = yPos + 24; }
         }
     }
 }
