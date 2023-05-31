@@ -101,19 +101,35 @@ public class Pacman extends Entity
         }
     }
 
+    public void teleport()
+    {
+        if (this.x <= -20)
+        {
+            this.x = 466;
+        }
+        if (this.x >= 468)
+        {
+            this.x = -18;
+        }
+    }
+
     public void update()
     {
+        //resets collision values
         this.collisionOnRight = false;
         this.collisionOnLeft = false;
         this.collisionOnUp = false;
         this.collisionOnDown = false;
 
+        //changes direction based on key pressed
         this.changeDirection();
 
         //collision checking and movement
         gp.cHandler.checkWallCollision(this);
         this.move();
 
+        //teleport checking
+        this.teleport();
 
         //adjusts global sprite timer (spriteCounter) for sprite animations
         spriteCounter++;
@@ -183,6 +199,6 @@ public class Pacman extends Entity
         g2.drawImage(image, x, y, null);
 
         //hitbox visualizer - delete eventually
-        //g2.draw3DRect(this.hitbox.x, this.hitbox.y, gp.displayedTileSize + 4, gp.displayedTileSize + 4, true);
+        g2.draw3DRect(this.hitbox.x, this.hitbox.y, gp.displayedTileSize + 4, gp.displayedTileSize + 4, true);
     }
 }

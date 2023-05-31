@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-//MAIN CLASS FOR PAINTING BACKGROUNDS, TEXT, AND PELLETS
+//MAIN CLASS FOR PAINTING BACKGROUNDS AND TEXT
 public class UI
 {
     GamePanel gp;
@@ -17,7 +17,7 @@ public class UI
     {
         this.gp = gp;
 
-        //importing "crackman" font
+        //importing font
         try
         {
             InputStream is = getClass().getResourceAsStream("/font/PixeloidSans-mLxMm.ttf");

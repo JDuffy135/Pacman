@@ -62,6 +62,14 @@ public class Spawner extends Entity
             if (h == 2) { yPos = yPos + 15; }
             else { yPos = yPos + 24; }
         }
+        Wall teleportBarrier1 = new Wall(gp, -28, 240);
+        walls.add(teleportBarrier1);
+        Wall teleportBarrier2 = new Wall(gp, 464, 240);
+        walls.add(teleportBarrier2);
+        Wall teleportBarrier3 = new Wall(gp, -28, 288);
+        walls.add(teleportBarrier3);
+        Wall teleportBarrier4 = new Wall(gp, 464, 288);
+        walls.add(teleportBarrier4);
     }
 
     //FOR TESTING PURPOSES - ONLY TO VISUALIZE WALL HITBOXES
@@ -89,5 +97,10 @@ public class Spawner extends Entity
             if (h == 2) { yPos = yPos + 15; }
             else { yPos = yPos + 24; }
         }
+        //Walls that are offscreen
+//        g2.draw3DRect(-24, 240, 14, 14, false);
+//        g2.draw3DRect(462, 240, 14, 14, false);
+//        g2.draw3DRect(-24, 288, 14, 14, false);
+//        g2.draw3DRect(462, 288, 14, 14, false);
     }
 }
