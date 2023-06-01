@@ -45,6 +45,7 @@ public class Pacman extends Entity
         lastDirection = "right";
     }
 
+    //sets up the images for pacman
     public void getPacmanImage()
     {
         up1 = setupImage("PacmanUpOpen", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
@@ -57,6 +58,7 @@ public class Pacman extends Entity
         left2 = setupImage("PacmanLeftClosed", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
     }
 
+    //scales image so it doesn't need to be resized every time it's drawn on the screen
     public BufferedImage setupImage(String imageName, int width, int height)
     {
         UtilityTool uTool = new UtilityTool();
@@ -72,6 +74,7 @@ public class Pacman extends Entity
         return image;
     }
 
+    //changes pacman's direction based on the input
     public void changeDirection()
     {
         //moves according to key pressed
@@ -101,15 +104,16 @@ public class Pacman extends Entity
         }
     }
 
+    //teleportation when pacman goes through the pipe thingies
     public void teleport()
     {
-        if (this.x <= -20)
+        if (this.x <= -24)
         {
             this.x = 466;
         }
         if (this.x >= 468)
         {
-            this.x = -18;
+            this.x = -22;
         }
     }
 
@@ -124,8 +128,9 @@ public class Pacman extends Entity
         //changes direction based on key pressed
         this.changeDirection();
 
-        //collision checking and movement
+        //wall & item collision checking and movement
         gp.cHandler.checkWallCollision(this);
+        //gp.icHandler.checkItemCollision(this);
         this.move();
 
         //teleport checking
@@ -199,6 +204,6 @@ public class Pacman extends Entity
         g2.drawImage(image, x, y, null);
 
         //hitbox visualizer - delete eventually
-        g2.draw3DRect(this.hitbox.x, this.hitbox.y, gp.displayedTileSize + 4, gp.displayedTileSize + 4, true);
+        //g2.draw3DRect(this.hitbox.x, this.hitbox.y, gp.displayedTileSize + 4, gp.displayedTileSize + 4, true);
     }
 }

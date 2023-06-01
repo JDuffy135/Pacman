@@ -18,10 +18,12 @@ public class Spawner extends Entity
         this.gp = gp;
     }
 
+    //creates a 2D array to figure out where walls need to be placed on the map
     public void instantiateGameboardArray(int[][] gameboard)
     {
         try
         {
+            //NOTE: change directory to be more generic
             Scanner scanner = new Scanner(new File("/Users/jakeduffy/Desktop/COMP SCI PROJECTS/PacMan From Scratch/res/textfiles/Wallmap.txt"));
             int width = scanner.nextInt();
             int height = scanner.nextInt();
@@ -38,6 +40,8 @@ public class Spawner extends Entity
         }
     }
 
+    //sets up the walls for collisions
+    //code is quite ugly here but it works so shush
     public void createWalls()
     {
         instantiateGameboardArray(gameboard);
@@ -84,7 +88,6 @@ public class Spawner extends Entity
             {
                 if (gameboard[w][h] == 1)
                 {
-                    //NOTE: replace these drawings with 10x10 Wall objects
                     g2.draw3DRect(xPos, yPos, 14, 14, false);
                 }
                 if (w == 1 || w == 16) { xPos = xPos + 17; }

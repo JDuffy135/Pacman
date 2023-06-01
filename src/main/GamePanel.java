@@ -6,6 +6,8 @@ import java.awt.*;
 import entity.CollisionHandler;
 import entity.Pacman;
 import entity.Spawner;
+import item.ItemCollisionHandler;
+import item.ItemSpawner;
 
 public class GamePanel extends JPanel implements Runnable
 {
@@ -24,7 +26,12 @@ public class GamePanel extends JPanel implements Runnable
     Thread gameThread;
     public UI ui = new UI(this);
     public CollisionHandler cHandler = new CollisionHandler(this);
+    public ItemCollisionHandler icHandler = new ItemCollisionHandler(this);
     Spawner wallSpawner = new Spawner(this);
+    ItemSpawner itemSpawner = new ItemSpawner(this);
+
+    //SCORE
+    public int score = 0;
 
     //FPS
     final int FPS = 60;
@@ -99,10 +106,11 @@ public class GamePanel extends JPanel implements Runnable
         }
     }
 
-    //updates sprites
+    //updates sprites and values
     public void update()
     {
         pacman.update();
+        //itemSpawner.updateFruitTimer(); MIGHT NOT NEED THIS, I DIDN'T LOOK INTO FRUIT MECHANICS YET
     }
 
     @Override
@@ -116,22 +124,29 @@ public class GamePanel extends JPanel implements Runnable
         drawStart = System.nanoTime();
 
 
-
         //MENU SCREEN
         //...
 
-        //GAME BOARD
-        ui.draw(g2);
 
-        //PLAYER
-        pacman.draw(g2);
-        //wallSpawner.paintWalls(g2);
+        //GAME BOARD AND PELLETS/FRUITS
+        ui.draw(g2);
+        itemSpawner.drawItems(g2);
+        //wallSpawner.paintWalls(g2); //for debugging
+
+
+        //SINGLE EXECUTION COMMANDS
         if (flag == false)
         {
             //using a flag just because I want this to run once - will eventually fix with game states
             wallSpawner.createWalls();
+            itemSpawner.createPellets();
         }
         flag = true;
+
+
+        //PLAYER
+        pacman.draw(g2);
+
 
         //GHOSTS
         //...

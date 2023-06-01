@@ -7,6 +7,7 @@ public class Wall extends Entity
 {
     GamePanel gp;
 
+    //Wall object constructor - pretty straight forward not gonna lie
     public Wall(GamePanel gp, int xPos, int yPos)
     {
         this.gp = gp;
