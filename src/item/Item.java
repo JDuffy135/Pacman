@@ -27,34 +27,38 @@ public class Item
     public int x, y;
     public Rectangle hitbox;
     public int points;
-    public BufferedImage image;
-    public int arrayPositionX, arrayPositionY; //NOTE: itemBoard[arrayPositionX][arrayPositionY] will be set to 0 when
-                                               //pellet/fruit is eaten so that it isn't redrawn in the next frame
-    public int fruitType; //null for pellets
+//    public BufferedImage image;
+//    public int boardPositionX, boardPositionY; /* NOTE: itemBoard[arrayPositionX][arrayPositionY] will be set to 0 when
+//                                               pellet/fruit is eaten so that it isn't redrawn in the next frame */
+    public int arrayIndex;
+    public int fruitType; /* only for fruits */
 
 
-    //LOAD ITEM IMAGES
-    public int spSize = 4;
-    public int bpSize = 12;
+    //ITEM SIZE VALUES & LOAD ITEM IMAGES
+    public int pSize = 16;
+    public int pHitboxSize = 4;
     public int fruitSize = 20;
-    public BufferedImage smallPelletImage = getImage("SmallPellet", spSize, spSize);
-    public BufferedImage bigPelletImage = getImage("SmallPellet", bpSize, bpSize);
+    public BufferedImage smallPelletImage = getImage("SmallPellet", pSize, pSize);
+    public BufferedImage bigPelletImage = getImage("LargePellet", pSize, pSize);
     public BufferedImage cherriesImage = getImage("Cherries", fruitSize, fruitSize);
     public BufferedImage strawberryImage = getImage("Strawberry", fruitSize, fruitSize);
     public BufferedImage orangeImage = getImage("Orange", fruitSize, fruitSize);
     public BufferedImage appleImage = getImage("Apple", fruitSize, fruitSize);
 
 
-    //BOARD CONTAINING ALL PELLETS AND FRUITS
-    public static int[][] itemBoard = new int[26][29];
+    //2D ARRAY REPRESENTATION OF GAMEBOARD
+    /* 0 = empty space or wall, 1 = small pellet, 2 = big pellet */
+    public static int[][] itemBoard = new int[29][26];
 
-    //ARRAYLISTS CONTAINING ALL ON-SCREEN PELLETS
-    public static ArrayList<SmallPellet> smallPellets = new ArrayList<SmallPellet>();
-    public static ArrayList<BigPellet> bigPellets = new ArrayList<BigPellet>();
+    //ARRAYS CONTAINING ALL ON-SCREEN PELLETS
+    /* originally I was going to use arraylists, but since "remove()" method is O(n) runtime and the number
+    //of pellets is constant, I decided on arrays instead */
+    public static SmallPellet[] smallPellets = new SmallPellet[240];
+    public static BigPellet[] bigPellets = new BigPellet[4];
 
 
 
-    //scales image to proper size and returns for quick access
+    /* scales image to proper size and returns for quick access */
     public BufferedImage getImage(String itemName, int width, int height)
     {
         UtilityTool uTool = new UtilityTool();

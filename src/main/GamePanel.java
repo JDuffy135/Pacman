@@ -5,21 +5,21 @@ import java.awt.*;
 
 import entity.CollisionHandler;
 import entity.Pacman;
-import entity.Spawner;
+import entity.WallSpawner;
 import item.ItemCollisionHandler;
 import item.ItemSpawner;
 
 public class GamePanel extends JPanel implements Runnable
 {
     //SCREEN SETTINGS
-    //original game screen resolution: 224x288 pixels
-    final int originalTileSize = 8; //8x8 tiles in original game (pacman and ghosts take up 4 tiles because they are 16x16)
-    final int screenScale = 2; //scale tiles by factor of 2
-    public final int displayedTileSize = originalTileSize * screenScale; //actual tile size displayed (16x16)
+    /* original game screen resolution: 224x288 pixels */
+    final int originalTileSize = 8; /* 8x8 tiles in original game (pacman and ghosts take up 4 tiles because they are 16x16) */
+    final int screenScale = 2; /* scale tiles by factor of 2 */
+    public final int displayedTileSize = originalTileSize * screenScale; /* actual tile size displayed (16x16) */
     final int horizontalTileCount = 28;
     final int verticalTileCount = 36;
-    final int screenWidth = displayedTileSize * horizontalTileCount; //448 pixels
-    final int screenHeight = displayedTileSize * verticalTileCount; //576 pixels
+    final int screenWidth = displayedTileSize * horizontalTileCount; /* 448 pixels */
+    final int screenHeight = displayedTileSize * verticalTileCount; /* 576 pixels */
 
     //SYSTEM
     KeyHandler keyH = new KeyHandler();
@@ -27,11 +27,8 @@ public class GamePanel extends JPanel implements Runnable
     public UI ui = new UI(this);
     public CollisionHandler cHandler = new CollisionHandler(this);
     public ItemCollisionHandler icHandler = new ItemCollisionHandler(this);
-    Spawner wallSpawner = new Spawner(this);
+    WallSpawner wallSpawner = new WallSpawner(this);
     ItemSpawner itemSpawner = new ItemSpawner(this);
-
-    //SCORE
-    public int score = 0;
 
     //FPS
     final int FPS = 60;
@@ -61,13 +58,13 @@ public class GamePanel extends JPanel implements Runnable
     public void startGameThread()
     {
         gameThread = new Thread(this);
-        gameThread.start(); //calls run method
+        gameThread.start(); /* calls run method */
     }
 
     @Override
     public void run()
     {
-        //setup for game loop
+        /* setup for game loop */
         double drawInterval = 1000000000/FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
@@ -75,7 +72,7 @@ public class GamePanel extends JPanel implements Runnable
         long timer = 0;
         int drawCount = 0;
 
-        //main game loop
+        //MAIN GAME LOOP
         while (gameThread != null)
         {
             currentTime = System.nanoTime();
@@ -85,18 +82,18 @@ public class GamePanel extends JPanel implements Runnable
 
             if (delta >= 1)
             {
-                //update sprite values
+                /* update sprite values */
                 update();
 
-                ////calls paintComponent to update the screen based on updated sprite values
+                /* calls paintComponent to update the screen based on updated sprite values */
                 repaint();
 
-                //resets game loop at end of each execution
+                /* resets game loop at end of each execution */
                 delta--;
                 drawCount++;
             }
 
-            //display FPS
+            /* display FPS */
             if (timer >= 1000000000)
             {
                 //System.out.println("FPS: " + drawCount);
@@ -106,18 +103,19 @@ public class GamePanel extends JPanel implements Runnable
         }
     }
 
-    //updates sprites and values
+    /* updates sprites and values */
     public void update()
     {
+        icHandler.checkIfWon();
         pacman.update();
         //itemSpawner.updateFruitTimer(); MIGHT NOT NEED THIS, I DIDN'T LOOK INTO FRUIT MECHANICS YET
     }
 
     @Override
-    public void paintComponent(Graphics g) //updates screen and images
+    public void paintComponent(Graphics g) /* updates screen and images */
     {
         super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D)g; //converts g to a Graphics2D object so that we can use 2D graphics methods
+        Graphics2D g2 = (Graphics2D)g; /* converts g to a Graphics2D object so that we can use 2D graphics methods */
 
         //DEBUG
         long drawStart = 0;
@@ -129,7 +127,7 @@ public class GamePanel extends JPanel implements Runnable
 
 
         //GAME BOARD AND PELLETS/FRUITS
-        ui.draw(g2);
+        ui.draw(g2, icHandler);
         itemSpawner.drawItems(g2);
         //wallSpawner.paintWalls(g2); //for debugging
 
@@ -137,7 +135,7 @@ public class GamePanel extends JPanel implements Runnable
         //SINGLE EXECUTION COMMANDS
         if (flag == false)
         {
-            //using a flag just because I want this to run once - will eventually fix with game states
+            /* using a flag just because I want this to run once - will eventually fix with game states */
             wallSpawner.createWalls();
             itemSpawner.createPellets();
         }

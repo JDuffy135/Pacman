@@ -6,14 +6,13 @@ import java.awt.Graphics2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.ArrayList;
 
-public class Spawner extends Entity
+public class WallSpawner extends Entity
 {
     GamePanel gp;
     int[][] gameboard = new int[19][22];
 
-    public Spawner(GamePanel gp)
+    public WallSpawner(GamePanel gp)
     {
         this.gp = gp;
     }
@@ -64,7 +63,8 @@ public class Spawner extends Entity
             }
             xPos = -6;
             if (h == 2) { yPos = yPos + 15; }
-            else { yPos = yPos + 24; }
+            else if (h != 20) { yPos = yPos + 24; }
+            else { yPos = yPos + 22; }
         }
         Wall teleportBarrier1 = new Wall(gp, -28, 240);
         walls.add(teleportBarrier1);
@@ -98,7 +98,8 @@ public class Spawner extends Entity
             }
             xPos = -6;
             if (h == 2) { yPos = yPos + 15; }
-            else { yPos = yPos + 24; }
+            else if (h != 20) { yPos = yPos + 24; }
+            else { yPos = yPos + 22; }
         }
         //Walls that are offscreen
 //        g2.draw3DRect(-24, 240, 14, 14, false);

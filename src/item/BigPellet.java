@@ -7,15 +7,13 @@ public class BigPellet extends Item
 {
     GamePanel gp;
 
-    public BigPellet(GamePanel gp, int xPos, int yPos, int row, int col)
+    public BigPellet(GamePanel gp, int xPos, int yPos,/* int row, int col,*/ int index)
     {
         this.gp = gp;
         x = xPos;
         y = yPos;
-        hitbox = new Rectangle(xPos, yPos, bpSize, bpSize);
+        hitbox = new Rectangle(xPos + 4, yPos + 4, pHitboxSize, pHitboxSize);
         points = 50;
-        image = bigPelletImage;
-        arrayPositionX = row;
-        arrayPositionY = col;
+        arrayIndex = index;
     }
 }

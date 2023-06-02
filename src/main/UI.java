@@ -1,5 +1,7 @@
 package main;
 
+import item.ItemCollisionHandler;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -17,7 +19,7 @@ public class UI
     {
         this.gp = gp;
 
-        //importing font
+        /* importing font */
         try
         {
             InputStream is = getClass().getResourceAsStream("/font/PixeloidSans-mLxMm.ttf");
@@ -36,7 +38,7 @@ public class UI
     public void getBackgroundImage()
     {
         bg = null;
-        //NOTE TO SELF: use game states to determine which background is set up
+        /* NOTE TO SELF: use game states to determine which background is set up */
         try
         {
             bg = ImageIO.read(getClass().getResourceAsStream("/misc/GameScreen.png"));
@@ -46,11 +48,14 @@ public class UI
         }
     }
 
-    public void draw(Graphics2D g2)
+    public void draw(Graphics2D g2, ItemCollisionHandler icHandler)
     {
         g2.drawImage(bg, 0, -8, 448, 576, null);
         g2.setFont(primaryFont.deriveFont(20F));
         g2.setColor(Color.white);
         g2.drawString("GAME SCORE", 162, 28);
+
+        g2.setFont(primaryFont.deriveFont(16F));
+        g2.drawString(String.valueOf(icHandler.score), 320, 27);
     }
 }

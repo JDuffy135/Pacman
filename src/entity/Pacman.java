@@ -17,7 +17,7 @@ public class Pacman extends Entity
     public String lastDirection = "right";
     BufferedImage image;
 
-    //Pacman constructor
+    /* Pacman constructor */
     public Pacman(GamePanel gp, KeyHandler keyH)
     {
         this.gp = gp;
@@ -36,6 +36,7 @@ public class Pacman extends Entity
 
     }
 
+    /* sets default values for pacman if this wasn't self-evident */
     public void setDefaultPacmanValues()
     {
         this.x = 212;
@@ -45,7 +46,7 @@ public class Pacman extends Entity
         lastDirection = "right";
     }
 
-    //sets up the images for pacman
+    /* sets up the images for pacman */
     public void getPacmanImage()
     {
         up1 = setupImage("PacmanUpOpen", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
@@ -58,7 +59,7 @@ public class Pacman extends Entity
         left2 = setupImage("PacmanLeftClosed", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
     }
 
-    //scales image so it doesn't need to be resized every time it's drawn on the screen
+    /* scales image so it doesn't need to be resized every time it's drawn on the screen */
     public BufferedImage setupImage(String imageName, int width, int height)
     {
         UtilityTool uTool = new UtilityTool();
@@ -74,7 +75,7 @@ public class Pacman extends Entity
         return image;
     }
 
-    //changes pacman's direction based on the input
+    /* changes pacman's direction based on the input */
     public void changeDirection()
     {
         //moves according to key pressed
@@ -104,7 +105,7 @@ public class Pacman extends Entity
         }
     }
 
-    //teleportation when pacman goes through the pipe thingies
+    /* teleportation when pacman goes through the pipe thingies */
     public void teleport()
     {
         if (this.x <= -24)
@@ -119,24 +120,25 @@ public class Pacman extends Entity
 
     public void update()
     {
-        //resets collision values
+        /* resets collision values */
         this.collisionOnRight = false;
         this.collisionOnLeft = false;
         this.collisionOnUp = false;
         this.collisionOnDown = false;
 
-        //changes direction based on key pressed
+        //DIRECTION CHANGING BASED ON KEYBOARD INPUT
         this.changeDirection();
 
-        //wall & item collision checking and movement
+        //WALL AND ITEM COLLISION HANDLING & PACMAN MOVEMENT
         gp.cHandler.checkWallCollision(this);
-        //gp.icHandler.checkItemCollision(this);
+        gp.icHandler.checkItemCollision(this);
         this.move();
 
-        //teleport checking
+        //TELEPORT CHECKING
         this.teleport();
 
-        //adjusts global sprite timer (spriteCounter) for sprite animations
+        /* adjusts pacman sprite timer (spriteCounter) for animations */
+        /* NOTE TO SELF: will do this for every individual entity that has an animation */
         spriteCounter++;
         if (spriteCounter > 6)
         {
@@ -144,7 +146,7 @@ public class Pacman extends Entity
             {
                 spriteNum = 2;
             }
-            else //if spriteNum == 2
+            else /* if spriteNum == 2 */
             {
                 spriteNum = 1;
             }
@@ -203,7 +205,7 @@ public class Pacman extends Entity
 
         g2.drawImage(image, x, y, null);
 
-        //hitbox visualizer - delete eventually
+        /* hitbox visualizer - delete eventually */
         //g2.draw3DRect(this.hitbox.x, this.hitbox.y, gp.displayedTileSize + 4, gp.displayedTileSize + 4, true);
     }
 }
