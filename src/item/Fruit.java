@@ -25,18 +25,22 @@ public class Fruit extends Item
         if (this.fruitType == 3) /* cherries */
         {
             this.points = 100;
+            Item.currentFruitImage = getImage("Cherries", fruitSize, fruitSize);
         }
         else if (this.fruitType == 4) /* strawberry */
         {
             this.points = 300;
+            Item.currentFruitImage = getImage("Strawberry", fruitSize, fruitSize);
         }
         else if (this.fruitType == 5) /* orange */
         {
             this.points = 500;
+            Item.currentFruitImage = getImage("Orange", fruitSize, fruitSize);
         }
         else if (this.fruitType == 6) /* apple */
         {
             this.points = 700;
+            Item.currentFruitImage = getImage("Apple", fruitSize, fruitSize);
         }
     }
 }

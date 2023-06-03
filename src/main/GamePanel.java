@@ -31,7 +31,7 @@ public class GamePanel extends JPanel implements Runnable
     ItemSpawner itemSpawner = new ItemSpawner(this);
 
     //FPS
-    final int FPS = 60;
+    final public static int FPS = 60;
 
     //SPRITES
     Pacman pacman = new Pacman(this, keyH);
@@ -106,9 +106,18 @@ public class GamePanel extends JPanel implements Runnable
     /* updates sprites and values */
     public void update()
     {
+        //CHECKS IF ALL PELLETS EATEN
         icHandler.checkIfWon();
+
+        //DEALS WITH FRUIT SPAWNING
+        itemSpawner.fruitCheck();
+        if (ItemSpawner.fruitPresent == true)
+        {
+            itemSpawner.updateFruitTimer();
+        }
+
+        //UPDATES PACMAN ENTITY AND DEALS WITH PLAYER COLLISIONS
         pacman.update();
-        //itemSpawner.updateFruitTimer(); MIGHT NOT NEED THIS, I DIDN'T LOOK INTO FRUIT MECHANICS YET
     }
 
     @Override

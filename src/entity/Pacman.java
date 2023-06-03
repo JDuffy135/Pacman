@@ -14,7 +14,7 @@ public class Pacman extends Entity
 {
     GamePanel gp;
     KeyHandler keyH;
-    public String lastDirection = "right";
+    String lastDirection = "right";
     BufferedImage image;
 
     /* Pacman constructor */
@@ -78,7 +78,6 @@ public class Pacman extends Entity
     /* changes pacman's direction based on the input */
     public void changeDirection()
     {
-        //moves according to key pressed
         if (this.keyH.upPressed == true)
         {
             this.direction = "up";
@@ -105,7 +104,7 @@ public class Pacman extends Entity
         }
     }
 
-    /* teleportation when pacman goes through the pipe thingies */
+    /* teleportation occurs when pacman goes through the pipe thingies */
     public void teleport()
     {
         if (this.x <= -24)

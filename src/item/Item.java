@@ -27,9 +27,6 @@ public class Item
     public int x, y;
     public Rectangle hitbox;
     public int points;
-//    public BufferedImage image;
-//    public int boardPositionX, boardPositionY; /* NOTE: itemBoard[arrayPositionX][arrayPositionY] will be set to 0 when
-//                                               pellet/fruit is eaten so that it isn't redrawn in the next frame */
     public int arrayIndex;
     public int fruitType; /* only for fruits */
 
@@ -40,10 +37,7 @@ public class Item
     public int fruitSize = 20;
     public BufferedImage smallPelletImage = getImage("SmallPellet", pSize, pSize);
     public BufferedImage bigPelletImage = getImage("LargePellet", pSize, pSize);
-    public BufferedImage cherriesImage = getImage("Cherries", fruitSize, fruitSize);
-    public BufferedImage strawberryImage = getImage("Strawberry", fruitSize, fruitSize);
-    public BufferedImage orangeImage = getImage("Orange", fruitSize, fruitSize);
-    public BufferedImage appleImage = getImage("Apple", fruitSize, fruitSize);
+    public static BufferedImage currentFruitImage = null;
 
 
     //2D ARRAY REPRESENTATION OF GAMEBOARD

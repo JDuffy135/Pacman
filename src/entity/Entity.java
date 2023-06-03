@@ -20,6 +20,9 @@ public class Entity
     public String direction;
     public Rectangle hitbox;
 
+    //CURRENT LEVEL PACMAN IS ON
+    public static int currentLevel = 1; /* set to 1 by default */
+
     //ARRAYLIST CONTAINING ALL WALL OBJECTS
     public static ArrayList<Wall> walls = new ArrayList<Wall>(); //static because only one global walls ArrayList
 

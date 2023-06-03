@@ -1,5 +1,6 @@
 package item;
 
+import entity.Entity;
 import main.GamePanel;
 
 import java.awt.*;
@@ -7,10 +8,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
+//CONTROLS FRUITS AND PELLETS
 public class ItemSpawner extends Item
 {
     GamePanel gp;
-    public static long fruitTimer = 0;
+    public static Fruit fruit;
+    public static int currentFruit = 3; /* fruit types range from 3 to 6 */
+    public static int fruitTimer = 0; /* timer for when fruits are present */
+    public static boolean fruitPresent = false; /* true when a fruit is present */
 
     public ItemSpawner(GamePanel gp)
     {
@@ -44,8 +49,7 @@ public class ItemSpawner extends Item
     /* creates pellet objects and spawns them in their correct position on the map */
     public void createPellets()
     {
-        //x-axis: starting at 16 pixels from left, move 16 pixels to the right (26 tiles wide)
-        //y-axis: starting at ??? pixels from top, move 16 pixels down (29 tiles wide)
+        /* sets up itemBoard[][] and increments current player level */
         setupItemBoardArray();
 
         int xPos = 18;
@@ -76,6 +80,13 @@ public class ItemSpawner extends Item
     /* draws pellets and fruits in every frame according to itemBoard */
     public void drawItems(Graphics2D g2)
     {
+        /* draws fruit if one exists on the screen */
+        if (currentFruitImage != null)
+        {
+            g2.drawImage(currentFruitImage, 214, 310, null);
+        }
+
+        /* draws pellets */
         for (int i = 0 ; i < bigPellets.length ; i++)
         {
             if (bigPellets[i] != null)
@@ -98,22 +109,69 @@ public class ItemSpawner extends Item
         }
     }
 
-    /* updates fruitTimer value */
-    public void updateFruitTimer()
-    {
-        fruitTimer++;
 
-        //NOTE UPDATE LOGIC to replicate how fruits work in actual game, this is just a placeholder
-        if (fruitTimer >= 9000000000L)
+    /* checks to see if a fruit needs to be spawned, and calls spawnFruit() if necessary */
+    public void fruitCheck()
+    {
+        if (Entity.currentLevel <= 4 && fruitPresent == false) /* fruit type matches current level */
         {
-            spawnFruit();
-            fruitTimer = 0;
+            if (ItemCollisionHandler.pelletsEaten == 70 || ItemCollisionHandler.pelletsEaten == 170)
+            {
+                spawnFruit(gp, currentFruit);
+                if (ItemCollisionHandler.pelletsEaten >= 170) { currentFruit++; }
+            }
+        }
+        else if (Entity.currentLevel <= 6 && fruitPresent == false) /* fruit cycle incremented every time a fruit spawns */
+        {
+            if (currentFruit > 6) { currentFruit = 3; }
+
+            if (ItemCollisionHandler.pelletsEaten == 70)
+            {
+                spawnFruit(gp, currentFruit);
+                currentFruit++;
+            }
+            else if (ItemCollisionHandler.pelletsEaten == 170)
+            {
+                spawnFruit(gp, currentFruit);
+                currentFruit++;
+            }
+        }
+        else if (Entity.currentLevel > 6 && fruitPresent == false) /* only spawns apples after level 6 */
+        {
+            if (ItemCollisionHandler.pelletsEaten == 70 || ItemCollisionHandler.pelletsEaten == 170)
+            {
+                currentFruit = 6;
+                spawnFruit(gp, currentFruit);
+            }
         }
     }
 
-    /* spawns fruit based on fruitTimer value at itemBoard[][] based on timer */
-    public void spawnFruit()
+    public void spawnFruit(GamePanel gp, int type)
     {
+        fruit = new Fruit(gp, type);
+        fruitPresent = true;
+    }
 
+    /* updates fruitTimer value */
+    public static void updateFruitTimer()
+    {
+        fruitTimer++;
+
+        /* once 9 seconds have passed, fruit is deleted */
+        if (fruitTimer >= (9 * GamePanel.FPS))
+        {
+            deleteFruit();
+        }
+    }
+
+    /* deletes fruit if player collides with it, or if fruit timer ends */
+    public static void deleteFruit()
+    {
+        fruit.hitbox.setLocation(-5000, -5000);
+        fruit.x = -5000;
+        fruit.y = -5000;
+        fruitPresent = false;
+        fruitTimer = 0;
+        currentFruitImage = null;
     }
 }
