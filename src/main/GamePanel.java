@@ -96,7 +96,7 @@ public class GamePanel extends JPanel implements Runnable
             /* display FPS */
             if (timer >= 1000000000)
             {
-                //System.out.println("FPS: " + drawCount);
+                System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
             }
@@ -127,8 +127,8 @@ public class GamePanel extends JPanel implements Runnable
         Graphics2D g2 = (Graphics2D)g; /* converts g to a Graphics2D object so that we can use 2D graphics methods */
 
         //DEBUG
-        long drawStart = 0;
-        drawStart = System.nanoTime();
+//        long drawStart = 0;
+//        drawStart = System.nanoTime();
 
 
         //MENU SCREEN
@@ -138,7 +138,7 @@ public class GamePanel extends JPanel implements Runnable
         //GAME BOARD AND PELLETS/FRUITS
         ui.draw(g2, icHandler);
         itemSpawner.drawItems(g2);
-        //wallSpawner.paintWalls(g2); //for debugging
+        //wallSpawner.paintWalls(g2); /* for debugging */
 
 
         //SINGLE EXECUTION COMMANDS
@@ -160,9 +160,9 @@ public class GamePanel extends JPanel implements Runnable
 
 
         //DEBUG CONTINUED
-        long drawEnd = System.nanoTime();
-        long timePassed = drawEnd - drawStart;
-        System.out.println("Draw Time: " + timePassed);
+//        long drawEnd = System.nanoTime();
+//        long timePassed = drawEnd - drawStart;
+//        System.out.println("Draw Time: " + timePassed);
 
         g2.dispose();
     }

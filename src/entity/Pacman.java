@@ -14,7 +14,7 @@ public class Pacman extends Entity
 {
     GamePanel gp;
     KeyHandler keyH;
-    String lastDirection = "right";
+    String lastDirection;
     BufferedImage image;
 
     /* Pacman constructor */
@@ -25,14 +25,17 @@ public class Pacman extends Entity
         x = 0;
         y = 0;
         speed = 0;
+        hitbox = new Rectangle(x + 2, y + 2, gp.displayedTileSize + 4, gp.displayedTileSize + 4);
+
         collisionOnUp = false;
         collisionOnDown = false;
         collisionOnLeft = false;
         collisionOnRight = false;
+        lastDirection = "";
+        direction = "";
 
         setDefaultPacmanValues();
         getPacmanImage();
-        hitbox = new Rectangle(x + 2, y + 2, gp.displayedTileSize + 4, gp.displayedTileSize + 4);
 
     }
 
@@ -42,8 +45,8 @@ public class Pacman extends Entity
         this.x = 212;
         this.y = 404;
         this.speed = 2;
-        direction = "right";
-        lastDirection = "right";
+        this.direction = "stationary";
+        this.lastDirection = "right";
     }
 
     /* sets up the images for pacman */
@@ -76,27 +79,68 @@ public class Pacman extends Entity
     }
 
     /* changes pacman's direction based on the input */
-    public void changeDirection()
+    public void changeDirection(CollisionHandler cHandler)
     {
+//        if (this.keyH.upPressed == true)
+//        {
+//            this.direction = "up";
+//            this.lastDirection = "up";
+//        }
+//        else if (this.keyH.downPressed == true)
+//        {
+//            this.direction = "down";
+//            this.lastDirection = "down";
+//        }
+//        else if (this.keyH.leftPressed == true)
+//        {
+//            this.direction = "left";
+//            this.lastDirection = "left";
+//        }
+//        else if (this.keyH.rightPressed == true)
+//        {
+//            this.direction = "right";
+//            this.lastDirection = "right";
+//        }
+//        else
+//        {
+//            this.direction = "stationary";
+//        }
+
         if (this.keyH.upPressed == true)
         {
-            this.direction = "up";
-            this.lastDirection = "up";
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x, this.hitbox.y - 16, hitboxSize, hitboxSize)) == false)
+            {
+                this.direction = "up";
+                this.lastDirection = "up";
+                KeyHandler.keyPressed = false;
+            }
         }
         else if (this.keyH.downPressed == true)
         {
-            this.direction = "down";
-            this.lastDirection = "down";
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x, this.hitbox.y + 16, hitboxSize, hitboxSize)) == false)
+            {
+                this.direction = "down";
+                this.lastDirection = "down";
+                KeyHandler.keyPressed = false;
+            }
         }
         else if (this.keyH.leftPressed == true)
         {
-            this.direction = "left";
-            this.lastDirection = "left";
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x - 16, this.hitbox.y, hitboxSize, hitboxSize)) == false)
+            {
+                this.direction = "left";
+                this.lastDirection = "left";
+                KeyHandler.keyPressed = false;
+            }
         }
         else if (this.keyH.rightPressed == true)
         {
-            this.direction = "right";
-            this.lastDirection = "right";
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x + 16, this.hitbox.y, hitboxSize, hitboxSize)) == false)
+            {
+                this.direction = "right";
+                this.lastDirection = "right";
+                KeyHandler.keyPressed = false;
+            }
         }
         else
         {
@@ -117,6 +161,7 @@ public class Pacman extends Entity
         }
     }
 
+    //METHOD CALLED FROM GAME LOOP
     public void update()
     {
         /* resets collision values */
@@ -126,7 +171,10 @@ public class Pacman extends Entity
         this.collisionOnDown = false;
 
         //DIRECTION CHANGING BASED ON KEYBOARD INPUT
-        this.changeDirection();
+        if (KeyHandler.keyPressed == true)
+        {
+            this.changeDirection(gp.cHandler);
+        }
 
         //WALL AND ITEM COLLISION HANDLING & PACMAN MOVEMENT
         gp.cHandler.checkWallCollision(this);

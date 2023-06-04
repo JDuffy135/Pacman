@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener
 {
     public boolean upPressed, downPressed, leftPressed, rightPressed = false;
+    public static boolean keyPressed = false;
 
     @Override
     public void keyTyped(KeyEvent e)
@@ -17,21 +18,38 @@ public class KeyHandler implements KeyListener
     public void keyPressed(KeyEvent e)
     {
         int code = e.getKeyCode();
+        keyPressed = true;
 
-        if (code == KeyEvent.VK_W) //up
+        if (code == KeyEvent.VK_W) /* up */
         {
+            downPressed = false;
+            leftPressed = false;
+            rightPressed = false;
+
             upPressed = true;
         }
-        if (code == KeyEvent.VK_S) //down
+        if (code == KeyEvent.VK_S) /* down */
         {
+            upPressed = false;
+            leftPressed = false;
+            rightPressed = false;
+
             downPressed = true;
         }
-        if (code == KeyEvent.VK_A) //left
+        if (code == KeyEvent.VK_A) /* left */
         {
+            downPressed = false;
+            upPressed = false;
+            rightPressed = false;
+
             leftPressed = true;
         }
-        if (code == KeyEvent.VK_D) //right
+        if (code == KeyEvent.VK_D) /* right */
         {
+            downPressed = false;
+            upPressed = false;
+            leftPressed = false;
+
             rightPressed = true;
         }
     }
@@ -39,23 +57,25 @@ public class KeyHandler implements KeyListener
     @Override
     public void keyReleased(KeyEvent e)
     {
-        int code = e.getKeyCode();
+        /* NOTE: originally had push-and-hold movement mechanics */
 
-        if (code == KeyEvent.VK_W) //up
-        {
-            upPressed = false;
-        }
-        if (code == KeyEvent.VK_S) //down
-        {
-            downPressed = false;
-        }
-        if (code == KeyEvent.VK_A) //left
-        {
-            leftPressed = false;
-        }
-        if (code == KeyEvent.VK_D) //right
-        {
-            rightPressed = false;
-        }
+//        int code = e.getKeyCode();
+//
+//        if (code == KeyEvent.VK_W) //up
+//        {
+//            upPressed = false;
+//        }
+//        if (code == KeyEvent.VK_S) //down
+//        {
+//            downPressed = false;
+//        }
+//        if (code == KeyEvent.VK_A) //left
+//        {
+//            leftPressed = false;
+//        }
+//        if (code == KeyEvent.VK_D) //right
+//        {
+//            rightPressed = false;
+//        }
     }
 }

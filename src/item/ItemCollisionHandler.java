@@ -22,7 +22,7 @@ public class ItemCollisionHandler extends Item
     public void checkItemCollision(Entity entity)
     {
         /* Fruit */
-        if (currentFruitImage != null && entity.hitbox.intersects(ItemSpawner.fruit.hitbox))
+        if ((currentFruitImage != null) && (entity.hitbox.intersects(ItemSpawner.fruit.hitbox)))
         {
             score += ItemSpawner.fruit.points;
             ItemSpawner.deleteFruit();
@@ -67,7 +67,10 @@ public class ItemCollisionHandler extends Item
         {
             pelletsEaten = 0;
             Entity.currentLevel++;
-            if (ItemSpawner.fruitPresent == true) { ItemSpawner.deleteFruit(); }
+            if (ItemSpawner.fruitPresent == true)
+            {
+                ItemSpawner.deleteFruit();
+            }
             /* change game state and whatnot, because if code reaches this point, all pellets were eaten */
             System.out.println("YOU WON"); /* temp test */
         }

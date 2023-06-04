@@ -23,8 +23,7 @@ public class ItemSpawner extends Item
     }
 
 
-
-    /* resets 2d array "itemBoard" */
+    /* sets up 2D array "itemBoard" */
     public void setupItemBoardArray()
     {
         try
@@ -167,11 +166,12 @@ public class ItemSpawner extends Item
     /* deletes fruit if player collides with it, or if fruit timer ends */
     public static void deleteFruit()
     {
+        fruit.points = 0;
+        currentFruitImage = null;
         fruit.hitbox.setLocation(-5000, -5000);
         fruit.x = -5000;
         fruit.y = -5000;
         fruitPresent = false;
         fruitTimer = 0;
-        currentFruitImage = null;
     }
 }

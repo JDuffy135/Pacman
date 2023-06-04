@@ -12,15 +12,12 @@ import javax.imageio.ImageIO;
 public class Item
 {
     //REFERENCES
-    //SmallPellet hitbox size: ...
-        //small pellets are 1s on itemBoard
-    //BigPellet hitbox size: ...
-        //big pellets are 2s on itemBoard
-    //Fruit hitbox size: ...
-        //cherries are 3s on itemBoard
-        //strawberries are 4s on itemBoard
-        //oranges are 5s on itemBoard
-        //apples are 6s on itemBoard
+    //small pellets are 1s on itemBoard
+    //big pellets are 2s on itemBoard
+    //cherries fruitType = 3
+    //strawberry fruitType = 4
+    //orange fruitType = 5
+    //apple fruitType = 6
 
 
     //ITEM ATTRIBUTES
@@ -28,7 +25,7 @@ public class Item
     public Rectangle hitbox;
     public int points;
     public int arrayIndex;
-    public int fruitType; /* only for fruits */
+    public int fruitType; /* only for fruits - hence "fruit"Type */
 
 
     //ITEM SIZE VALUES & LOAD ITEM IMAGES
@@ -37,7 +34,15 @@ public class Item
     public int fruitSize = 20;
     public BufferedImage smallPelletImage = getImage("SmallPellet", pSize, pSize);
     public BufferedImage bigPelletImage = getImage("LargePellet", pSize, pSize);
+
+    /* used for displaying the current fruit */
     public static BufferedImage currentFruitImage = null;
+
+    /* all fruit images scaled once for performance optimization */
+    public BufferedImage cherriesImage = getImage("Cherries", fruitSize, fruitSize);
+    public BufferedImage strawberryImage = getImage("Strawberry", fruitSize, fruitSize);
+    public BufferedImage orangeImage = getImage("Orange", fruitSize, fruitSize);
+    public BufferedImage appleImage = getImage("Apple", fruitSize, fruitSize);
 
 
     //2D ARRAY REPRESENTATION OF GAMEBOARD
