@@ -34,16 +34,16 @@ public class CollisionHandler extends Entity
         switch(entity.direction)
         {
             case "up":
-                rect = new Rectangle(entity.hitbox.x, entity.hitbox.y - (entity.speed * 2), size, size);
+                rect = new Rectangle(entity.hitbox.x, entity.hitbox.y - 4, size, size);
                 checkForIntersections(entity, rect,1);
             case "down":
-                rect = new Rectangle(entity.hitbox.x, entity.hitbox.y + (entity.speed * 2), size, size);
+                rect = new Rectangle(entity.hitbox.x, entity.hitbox.y + 4, size, size);
                 checkForIntersections(entity, rect,2);
             case "left":
-                rect = new Rectangle(entity.hitbox.x - (entity.speed * 2), entity.hitbox.y, size, size);
+                rect = new Rectangle(entity.hitbox.x - 4, entity.hitbox.y, size, size);
                 checkForIntersections(entity, rect,3);
             case "right":
-                rect = new Rectangle(entity.hitbox.x + (entity.speed * 2), entity.hitbox.y, size, size);
+                rect = new Rectangle(entity.hitbox.x + 4, entity.hitbox.y, size, size);
                 checkForIntersections(entity, rect,4);
         }
     }

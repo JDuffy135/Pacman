@@ -96,7 +96,7 @@ public class GamePanel extends JPanel implements Runnable
             /* display FPS */
             if (timer >= 1000000000)
             {
-                System.out.println("FPS: " + drawCount);
+                //System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
             }
@@ -111,10 +111,7 @@ public class GamePanel extends JPanel implements Runnable
 
         //DEALS WITH FRUIT SPAWNING
         itemSpawner.fruitCheck();
-        if (ItemSpawner.fruitPresent == true)
-        {
-            itemSpawner.updateFruitTimer();
-        }
+        if (itemSpawner.fruitPresent == true) { itemSpawner.updateFruitTimer(); }
 
         //UPDATES PACMAN ENTITY AND DEALS WITH PLAYER COLLISIONS
         pacman.update();

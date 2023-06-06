@@ -9,7 +9,7 @@ import main.UtilityTool;
 
 import javax.imageio.ImageIO;
 
-public class Item
+public abstract class Item
 {
     //REFERENCES
     //small pellets are 1s on itemBoard

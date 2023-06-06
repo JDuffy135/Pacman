@@ -14,7 +14,6 @@ public class Pacman extends Entity
 {
     GamePanel gp;
     KeyHandler keyH;
-    String lastDirection;
     BufferedImage image;
 
     /* Pacman constructor */
@@ -31,8 +30,8 @@ public class Pacman extends Entity
         collisionOnDown = false;
         collisionOnLeft = false;
         collisionOnRight = false;
-        lastDirection = "";
         direction = "";
+        lastDirection = "";
 
         setDefaultPacmanValues();
         getPacmanImage();
@@ -78,34 +77,10 @@ public class Pacman extends Entity
         return image;
     }
 
-    /* changes pacman's direction based on the input */
-    public void changeDirection(CollisionHandler cHandler)
+    /* changes pacman direction based on keyboard input */
+    @Override
+    public void changeDirectionPacman(CollisionHandler cHandler)
     {
-//        if (this.keyH.upPressed == true)
-//        {
-//            this.direction = "up";
-//            this.lastDirection = "up";
-//        }
-//        else if (this.keyH.downPressed == true)
-//        {
-//            this.direction = "down";
-//            this.lastDirection = "down";
-//        }
-//        else if (this.keyH.leftPressed == true)
-//        {
-//            this.direction = "left";
-//            this.lastDirection = "left";
-//        }
-//        else if (this.keyH.rightPressed == true)
-//        {
-//            this.direction = "right";
-//            this.lastDirection = "right";
-//        }
-//        else
-//        {
-//            this.direction = "stationary";
-//        }
-
         if (this.keyH.upPressed == true)
         {
             if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x, this.hitbox.y - 16, hitboxSize, hitboxSize)) == false)
@@ -148,18 +123,6 @@ public class Pacman extends Entity
         }
     }
 
-    /* teleportation occurs when pacman goes through the pipe thingies */
-    public void teleport()
-    {
-        if (this.x <= -24)
-        {
-            this.x = 466;
-        }
-        if (this.x >= 468)
-        {
-            this.x = -22;
-        }
-    }
 
     //METHOD CALLED FROM GAME LOOP
     public void update()
@@ -171,10 +134,7 @@ public class Pacman extends Entity
         this.collisionOnDown = false;
 
         //DIRECTION CHANGING BASED ON KEYBOARD INPUT
-        if (KeyHandler.keyPressed == true)
-        {
-            this.changeDirection(gp.cHandler);
-        }
+        if (KeyHandler.keyPressed == true) { this.changeDirectionPacman(gp.cHandler); }
 
         //WALL AND ITEM COLLISION HANDLING & PACMAN MOVEMENT
         gp.cHandler.checkWallCollision(this);
