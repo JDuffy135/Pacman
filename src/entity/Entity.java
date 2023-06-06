@@ -1,9 +1,12 @@
 package entity;
 
 import main.KeyHandler;
+import main.UtilityTool;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.Rectangle;
+import java.io.IOException;
 import java.util.ArrayList;
 
 //MASTER CLASS FOR ALL ENTITIES/SPRITES
@@ -18,6 +21,7 @@ public abstract class Entity
     public boolean collisionOnDown = false;
     public int x, y;
     public int speed;
+    public BufferedImage image = null;
     public BufferedImage up1, up2, down1, down2, right1, right2, left1, left2;
     public String direction;
     public String lastDirection;
@@ -48,6 +52,52 @@ public abstract class Entity
     //ARRAYLIST CONTAINING ALL WALL OBJECTS
     public static ArrayList<Wall> walls = new ArrayList<Wall>(); //static because only one global walls ArrayList
 
+
+
+    /* sets default entity values */
+    /* ABSTRACT method - @Override in pacman and ghost classes */
+    public void setDefaultValues()
+    {
+
+    }
+
+    /* sets up images for given entity */
+    /* ABSTRACT method - @Override in pacman and ghost classes */
+    public void getImages()
+    {
+
+    }
+
+    /* updates entity values in game loop */
+    /* ABSTRACT method - @Override in pacman and ghost classes */
+    public void update()
+    {
+
+    }
+
+    /* updates entity drawings in game loop */
+    /* ABSTRACT method - @Override in pacman and ghost classes */
+    public void draw(Graphics2D g2)
+    {
+
+    }
+
+    /* scales image so it doesn't need to be resized every time it's drawn on the screen */
+    /* used for pacman and ghosts */
+    public BufferedImage setupImage(String imageName, int width, int height)
+    {
+        UtilityTool uTool = new UtilityTool();
+        BufferedImage image = null;
+        try
+        {
+            image = ImageIO.read(getClass().getResourceAsStream("/pacman/" + imageName + ".png"));
+            image = uTool.scaleImage(image, width, height);
+        }catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+        return image;
+    }
 
 
     /* adjusts entity and entity hitbox position based on direction and collisionOn<direction> values */
@@ -92,14 +142,14 @@ public abstract class Entity
     }
 
     /* changes pacman direction based on keyboard input */
-    /* abstract method - @Override in pacman class */
+    /* ABSTRACT method - @Override in pacman class */
     public void changeDirectionPacman(CollisionHandler cHandler)
     {
 
     }
 
     /* ghost direction change algorithm  */
-    /* abstract method - @Override in each ghost class */
+    /* ABSTRACT method - @Override in each ghost class */
     public void changeDirectionGhost(CollisionHandler cHandler)
     {
         //GHOST PATHFINDING ALGORITHM STEPS (for all modes except frightened)
@@ -133,7 +183,7 @@ public abstract class Entity
     }
 
     /* calculates ghost's target tile */
-    /* abstract method - @Override for each ghost class */
+    /* ABSTRACT method - @Override for each ghost class */
     public void calculateTarget()
     {
         /* target will depend on 1.) the ghost type, and 2.) the individual ghost's ghostState */

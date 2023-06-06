@@ -8,13 +8,11 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.*;
 
 public class Pacman extends Entity
 {
     GamePanel gp;
     KeyHandler keyH;
-    BufferedImage image;
 
     /* Pacman constructor */
     public Pacman(GamePanel gp, KeyHandler keyH)
@@ -24,6 +22,7 @@ public class Pacman extends Entity
         x = 0;
         y = 0;
         speed = 0;
+        image = null;
         hitbox = new Rectangle(x + 2, y + 2, gp.displayedTileSize + 4, gp.displayedTileSize + 4);
 
         collisionOnUp = false;
@@ -33,23 +32,26 @@ public class Pacman extends Entity
         direction = "";
         lastDirection = "";
 
-        setDefaultPacmanValues();
-        getPacmanImage();
+        setDefaultValues();
+        getImages();
 
     }
 
     /* sets default values for pacman if this wasn't self-evident */
-    public void setDefaultPacmanValues()
+    @Override
+    public void setDefaultValues()
     {
         this.x = 212;
         this.y = 404;
         this.speed = 2;
+
         this.direction = "stationary";
         this.lastDirection = "right";
     }
 
     /* sets up the images for pacman */
-    public void getPacmanImage()
+    @Override
+    public void getImages()
     {
         up1 = setupImage("PacmanUpOpen", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
         up2 = setupImage("PacmanUpClosed", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
@@ -59,22 +61,6 @@ public class Pacman extends Entity
         right2 = setupImage("PacmanRightClosed", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
         left1 = setupImage("PacmanLeftOpen", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
         left2 = setupImage("PacmanLeftClosed", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-    }
-
-    /* scales image so it doesn't need to be resized every time it's drawn on the screen */
-    public BufferedImage setupImage(String imageName, int width, int height)
-    {
-        UtilityTool uTool = new UtilityTool();
-        BufferedImage image = null;
-        try
-        {
-            image = ImageIO.read(getClass().getResourceAsStream("/pacman/" + imageName + ".png"));
-            image = uTool.scaleImage(image, width, height);
-        }catch(IOException e)
-        {
-            e.printStackTrace();
-        }
-        return image;
     }
 
     /* changes pacman direction based on keyboard input */
@@ -125,6 +111,7 @@ public class Pacman extends Entity
 
 
     //METHOD CALLED FROM GAME LOOP
+    @Override
     public void update()
     {
         /* resets collision values */
@@ -161,6 +148,7 @@ public class Pacman extends Entity
         }
     }
 
+    @Override
     public void draw(Graphics2D g2)
     {
         image = null;
