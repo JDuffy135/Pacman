@@ -3,9 +3,7 @@ package main;
 import javax.swing.JPanel;
 import java.awt.*;
 
-import entity.CollisionHandler;
-import entity.Pacman;
-import entity.WallSpawner;
+import entity.*;
 import item.ItemCollisionHandler;
 import item.ItemSpawner;
 
@@ -34,7 +32,8 @@ public class GamePanel extends JPanel implements Runnable
     final public static int FPS = 60;
 
     //SPRITES
-    Pacman pacman = new Pacman(this, keyH);
+    public Pacman pacman = new Pacman(this, keyH);
+    Blinky blinky = new Blinky(this);
 
     //GAME STATE
     public int gameState;
@@ -106,6 +105,8 @@ public class GamePanel extends JPanel implements Runnable
     /* updates sprites and values */
     public void update()
     {
+        Entity.levelTimer++;
+
         //CHECKS IF ALL PELLETS EATEN
         icHandler.checkIfWon();
 
@@ -115,6 +116,10 @@ public class GamePanel extends JPanel implements Runnable
 
         //UPDATES PACMAN ENTITY AND DEALS WITH PLAYER COLLISIONS
         pacman.update();
+        if (Entity.levelTimer >= 240) /* currently here for debugging */
+        {
+            blinky.update();
+        }
     }
 
     @Override
@@ -150,6 +155,7 @@ public class GamePanel extends JPanel implements Runnable
 
         //PLAYER
         pacman.draw(g2);
+        blinky.draw(g2);
 
 
         //GHOSTS

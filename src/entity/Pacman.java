@@ -23,8 +23,6 @@ public class Pacman extends Entity
         y = 0;
         speed = 0;
         image = null;
-        hitbox = new Rectangle(x + 2, y + 2, gp.displayedTileSize + 4, gp.displayedTileSize + 4);
-
         collisionOnUp = false;
         collisionOnDown = false;
         collisionOnLeft = false;
@@ -34,7 +32,7 @@ public class Pacman extends Entity
 
         setDefaultValues();
         getImages();
-
+        hitbox = new Rectangle(x, y, hitboxSize, hitboxSize);
     }
 
     /* sets default values for pacman if this wasn't self-evident */
@@ -53,14 +51,14 @@ public class Pacman extends Entity
     @Override
     public void getImages()
     {
-        up1 = setupImage("PacmanUpOpen", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        up2 = setupImage("PacmanUpClosed", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        down1 = setupImage("PacmanDownOpen", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        down2 = setupImage("PacmanDownClosed", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        right1 = setupImage("PacmanRightOpen", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        right2 = setupImage("PacmanRightClosed", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        left1 = setupImage("PacmanLeftOpen", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        left2 = setupImage("PacmanLeftClosed", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        up1 = setupImage("PacmanUpOpen", "/pacman/",gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        up2 = setupImage("PacmanUpClosed", "/pacman/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        down1 = setupImage("PacmanDownOpen","/pacman/",  gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        down2 = setupImage("PacmanDownClosed", "/pacman/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        right1 = setupImage("PacmanRightOpen", "/pacman/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        right2 = setupImage("PacmanRightClosed", "/pacman/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        left1 = setupImage("PacmanLeftOpen", "/pacman/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        left2 = setupImage("PacmanLeftClosed", "/pacman/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
     }
 
     /* changes pacman direction based on keyboard input */
@@ -69,7 +67,7 @@ public class Pacman extends Entity
     {
         if (this.keyH.upPressed == true)
         {
-            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x, this.hitbox.y - 16, hitboxSize, hitboxSize)) == false)
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x, this.hitbox.y - 16, hitboxSize + 2, hitboxSize + 2)) == false)
             {
                 this.direction = "up";
                 this.lastDirection = "up";
@@ -78,7 +76,7 @@ public class Pacman extends Entity
         }
         else if (this.keyH.downPressed == true)
         {
-            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x, this.hitbox.y + 16, hitboxSize, hitboxSize)) == false)
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x, this.hitbox.y + 16, hitboxSize + 2, hitboxSize + 2)) == false)
             {
                 this.direction = "down";
                 this.lastDirection = "down";
@@ -87,7 +85,7 @@ public class Pacman extends Entity
         }
         else if (this.keyH.leftPressed == true)
         {
-            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x - 16, this.hitbox.y, hitboxSize, hitboxSize)) == false)
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x - 16, this.hitbox.y, hitboxSize + 2, hitboxSize + 2)) == false)
             {
                 this.direction = "left";
                 this.lastDirection = "left";
@@ -96,7 +94,7 @@ public class Pacman extends Entity
         }
         else if (this.keyH.rightPressed == true)
         {
-            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x + 16, this.hitbox.y, hitboxSize, hitboxSize)) == false)
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x + 16, this.hitbox.y, hitboxSize + 2, hitboxSize + 2)) == false)
             {
                 this.direction = "right";
                 this.lastDirection = "right";
@@ -201,6 +199,6 @@ public class Pacman extends Entity
         g2.drawImage(image, x, y, null);
 
         /* hitbox visualizer - delete eventually */
-        //g2.draw3DRect(this.hitbox.x, this.hitbox.y, gp.displayedTileSize + 4, gp.displayedTileSize + 4, true);
+        //g2.draw3DRect(this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height, true);
     }
 }

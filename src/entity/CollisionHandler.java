@@ -17,9 +17,9 @@ public class CollisionHandler extends Entity
     {
         /* finds location of each side of entity's "hitbox" */
         int entityLeftX = entity.x + entity.hitboxOffset;
-        int entityRightX = entityLeftX + entity.hitboxSize;
+        int entityRightX = entityLeftX + entity.hitbox.width;
         int entityTopY = entity.y + entity.hitboxOffset;
-        int entityBottomY = entityTopY + entity.hitboxSize;
+        int entityBottomY = entityTopY + entity.hitbox.height;
 
         /* creates a temporary hitbox offset in the direction of key pressed to check if entity can move there */
         directionalHitbox(entity, entityLeftX, entityTopY);
@@ -28,23 +28,28 @@ public class CollisionHandler extends Entity
     /* creates a new hitbox offset by the entity's movement speed in it's current direction */
     public void directionalHitbox(Entity entity, int xLeft, int yTop)
     {
-        int size = entity.hitboxSize;
+        int size = entity.hitbox.width;
         Rectangle rect;
 
-        switch(entity.direction)
+        if (entity.direction == "up")
         {
-            case "up":
-                rect = new Rectangle(entity.hitbox.x, entity.hitbox.y - 4, size, size);
-                checkForIntersections(entity, rect,1);
-            case "down":
-                rect = new Rectangle(entity.hitbox.x, entity.hitbox.y + 4, size, size);
-                checkForIntersections(entity, rect,2);
-            case "left":
-                rect = new Rectangle(entity.hitbox.x - 4, entity.hitbox.y, size, size);
-                checkForIntersections(entity, rect,3);
-            case "right":
-                rect = new Rectangle(entity.hitbox.x + 4, entity.hitbox.y, size, size);
-                checkForIntersections(entity, rect,4);
+            rect = new Rectangle(entity.hitbox.x, entity.hitbox.y - 4, size, size);
+            checkForIntersections(entity, rect,1);
+        }
+        else if (entity.direction == "down")
+        {
+            rect = new Rectangle(entity.hitbox.x, entity.hitbox.y + 4, size, size);
+            checkForIntersections(entity, rect,2);
+        }
+        else if (entity.direction == "left")
+        {
+            rect = new Rectangle(entity.hitbox.x - 4, entity.hitbox.y, size, size);
+            checkForIntersections(entity, rect,3);
+        }
+        else if (entity.direction == "right")
+        {
+            rect = new Rectangle(entity.hitbox.x + 4, entity.hitbox.y, size, size);
+            checkForIntersections(entity, rect,4);
         }
     }
 

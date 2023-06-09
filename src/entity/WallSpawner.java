@@ -63,7 +63,8 @@ public class WallSpawner extends Entity
             }
             xPos = -6;
             if (h == 2) { yPos = yPos + 15; }
-            else if (h != 20) { yPos = yPos + 24; }
+            else if (h == 8) { yPos = yPos + 26; }
+            else if (h != 12 && h != 20) { yPos = yPos + 24; }
             else { yPos = yPos + 22; }
         }
         Wall teleportBarrier1 = new Wall(gp, -28, 240);
@@ -98,7 +99,8 @@ public class WallSpawner extends Entity
             }
             xPos = -6;
             if (h == 2) { yPos = yPos + 15; }
-            else if (h != 20) { yPos = yPos + 24; }
+            else if (h == 8) { yPos = yPos + 26; }
+            else if (h != 12 && h != 20) { yPos = yPos + 24; }
             else { yPos = yPos + 22; }
         }
         //Walls that are offscreen
