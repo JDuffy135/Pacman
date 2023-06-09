@@ -138,7 +138,15 @@ public class Blinky extends Entity
             up = checkGhostDirection("up", cHandler);
             left = checkGhostDirection("left", cHandler);
             right = checkGhostDirection("right", cHandler);
-            if (up == 9999 && left == 9999 && right == 9999)
+
+            /* special intersections where ghosts can't turn up */
+            if ((this.x >= 142 && this.x <= 280 && this.y >= 390 && this.y <= 406) ||
+                    (this.x >= 142 && this.x <= 280 && this.y >= 196 && this.y <= 216))
+            {
+                up = Integer.MAX_VALUE;
+            }
+
+            if (up >= 9999 && left >= 9999 && right >= 9999)
             {
                 /* maintains direction if all sides result in wall collision */
                 this.direction = this.direction;
@@ -163,7 +171,15 @@ public class Blinky extends Entity
             up = checkGhostDirection("up", cHandler);
             left = checkGhostDirection("left", cHandler);
             down = checkGhostDirection("down", cHandler);
-            if (up == 9999 && left == 9999 && down == 9999)
+
+            /* special intersections where ghosts can't turn up */
+            if ((this.x >= 142 && this.x <= 280 && this.y >= 390 && this.y <= 406) ||
+                    (this.x >= 142 && this.x <= 280 && this.y >= 196 && this.y <= 216))
+            {
+                up = Integer.MAX_VALUE;
+            }
+
+            if (up >= 9999 && left >= 9999 && down >= 9999)
             {
                 /* maintains direction if all sides result in wall collision */
                 this.direction = this.direction;
@@ -188,7 +204,7 @@ public class Blinky extends Entity
             left = checkGhostDirection("left", cHandler);
             down = checkGhostDirection("down", cHandler);
             right = checkGhostDirection("right", cHandler);
-            if (left == 9999 && down == 9999 && right == 9999)
+            if (left >= 9999 && down >= 9999 && right >= 9999)
             {
                 /* maintains direction if all sides result in wall collision */
                 this.direction = this.direction;
@@ -213,7 +229,15 @@ public class Blinky extends Entity
             up = checkGhostDirection("up", cHandler);
             down = checkGhostDirection("down", cHandler);
             right = checkGhostDirection("right", cHandler);
-            if (up == 9999 && down == 9999 && right == 9999)
+
+            /* special intersections where ghosts can't turn up */
+            if ((this.x >= 142 && this.x <= 280 && this.y >= 390 && this.y <= 406) ||
+                    (this.x >= 142 && this.x <= 280 && this.y >= 196 && this.y <= 216))
+            {
+                up = Integer.MAX_VALUE;
+            }
+
+            if (up >= 9999 && down >= 9999 && right >= 9999)
             {
                 /* maintains direction if all sides result in wall collision */
                 this.direction = this.direction;
@@ -261,14 +285,14 @@ public class Blinky extends Entity
         else
         {
             this.movementCooldownTimer++;
-            if (this.movementCooldownTimer >= 12)
+            if (this.movementCooldownTimer >= 16)
             {
                 this.movementCooldownTimer = 0;
             }
         }
         gp.cHandler.checkWallCollision(this);
         //System.out.println("LEFT: " + collisionOnLeft + " RIGHT: " + collisionOnRight + " UP: " + collisionOnUp + " DOWN: " + collisionOnDown);
-        System.out.println(this.direction);
+        System.out.println("X: " + this.x + " Y: " + this.y);
         this.moveGhost();
 
         //TELEPORT CHECKING
@@ -344,16 +368,16 @@ public class Blinky extends Entity
         g2.drawImage(image, x, y, null);
 
         /* hitbox visualizer - delete eventually */
-        g2.draw3DRect(this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height, true);
-        g2.draw3DRect(this.killHitbox.x, this.killHitbox.y, this.killHitbox.width, this.killHitbox.height, true);
+//        g2.draw3DRect(this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height, true);
+//        g2.draw3DRect(this.killHitbox.x, this.killHitbox.y, this.killHitbox.width, this.killHitbox.height, true);
 
         /* directional hitbox visualizer - delete ventually */
-//        g2.draw3DRect(this.hitbox.x, this.hitbox.y - 16, hitboxSize + 2, hitboxSize + 2, true);
-//        g2.draw3DRect(this.hitbox.x, this.hitbox.y + 16, hitboxSize + 2, hitboxSize + 2, true);
-//        g2.draw3DRect(this.hitbox.x - 16, this.hitbox.y, hitboxSize + 2, hitboxSize + 2, true);
-//        g2.draw3DRect(this.hitbox.x + 16, this.hitbox.y, hitboxSize + 2, hitboxSize + 2, true);
+//        g2.draw3DRect(this.hitbox.x, this.hitbox.y - 18, hitboxSize + 2, hitboxSize + 2, true);
+//        g2.draw3DRect(this.hitbox.x, this.hitbox.y + 18, hitboxSize + 2, hitboxSize + 2, true);
+//        g2.draw3DRect(this.hitbox.x - 18, this.hitbox.y, hitboxSize + 2, hitboxSize + 2, true);
+//        g2.draw3DRect(this.hitbox.x + 18, this.hitbox.y, hitboxSize + 2, hitboxSize + 2, true);
 
         /* target visuzlizer - delete eventually */
-        g2.draw3DRect(this.targetX, this.targetY, this.killHitbox.width, this.killHitbox.height, true);
+//        g2.draw3DRect(this.targetX, this.targetY, this.killHitbox.width, this.killHitbox.height, true);
     }
 }

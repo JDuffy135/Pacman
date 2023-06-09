@@ -305,46 +305,46 @@ public abstract class Entity
     {
         if (side == "up")
         {
-            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x, this.hitbox.y - 16, hitboxSize + 2, hitboxSize + 2)) == true)
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x, this.hitbox.y - 18, hitboxSize + 2, hitboxSize + 2)) == true)
             {
                 return 9999;
             }
             else
             {
-                return distanceToTarget((this.hitbox.x + (this.hitbox.width)/2), (this.hitbox.y + (this.hitbox.height)/2) - 14);
+                return distanceToTarget((this.hitbox.x + (this.hitbox.width)/2), (this.hitbox.y + (this.hitbox.height)/2) - 20);
             }
         }
         else if (side == "left")
         {
-            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x - 16, this.hitbox.y, hitboxSize + 2, hitboxSize + 2)) == true)
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x - 18, this.hitbox.y, hitboxSize + 2, hitboxSize + 2)) == true)
             {
                 return 9999;
             }
             else
             {
-                return distanceToTarget((this.hitbox.x + (this.hitbox.width)/2) - 14, (this.hitbox.y + (this.hitbox.height)/2));
+                return distanceToTarget((this.hitbox.x + (this.hitbox.width)/2) - 20, (this.hitbox.y + (this.hitbox.height)/2));
             }
         }
         else if (side == "down")
         {
-            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x, this.hitbox.y + 16, hitboxSize + 2, hitboxSize + 2)) == true)
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x, this.hitbox.y + 18, hitboxSize + 2, hitboxSize + 2)) == true)
             {
                 return 9999;
             }
             else
             {
-                return distanceToTarget((this.hitbox.x + (this.hitbox.width)/2), (this.hitbox.y + (this.hitbox.height)/2) + 14);
+                return distanceToTarget((this.hitbox.x + (this.hitbox.width)/2), (this.hitbox.y + (this.hitbox.height)/2) + 20);
             }
         }
         else if (side == "right")
         {
-            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x + 16, this.hitbox.y, hitboxSize + 2, hitboxSize + 2)) == true)
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x + 18, this.hitbox.y, hitboxSize + 2, hitboxSize + 2)) == true)
             {
                 return 9999;
             }
             else
             {
-                return distanceToTarget((this.hitbox.x + (this.hitbox.width)/2) + 14, (this.hitbox.y + (this.hitbox.height)/2));
+                return distanceToTarget((this.hitbox.x + (this.hitbox.width)/2) + 20, (this.hitbox.y + (this.hitbox.height)/2));
             }
         }
 

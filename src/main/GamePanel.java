@@ -116,7 +116,7 @@ public class GamePanel extends JPanel implements Runnable
 
         //UPDATES PACMAN ENTITY AND DEALS WITH PLAYER COLLISIONS
         pacman.update();
-        if (Entity.levelTimer >= 240) /* currently here for debugging */
+        if (Entity.levelTimer >= 180) /* currently here for debugging */
         {
             blinky.update();
         }
