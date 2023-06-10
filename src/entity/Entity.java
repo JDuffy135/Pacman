@@ -1,6 +1,5 @@
 package entity;
 
-import main.KeyHandler;
 import main.UtilityTool;
 
 import javax.imageio.ImageIO;
@@ -218,14 +217,7 @@ public abstract class Entity
 
     /* direction changing logic when in chase mode */
     /* ABSTRACT method - @Override for each ghost class */
-    public void chaseLogic(CollisionHandler cHandler)
-    {
-
-    }
-
-    /* direction changing logic when in scatter mode */
-    /* ABSTRACT method - @Override for each ghost class */
-    public void scatterLogic(CollisionHandler cHandler)
+    public void targetChaseLogic(CollisionHandler cHandler)
     {
 
     }
@@ -273,25 +265,30 @@ public abstract class Entity
         switch(newState)
         {
             case "idle":
+                this.speed = 2;
                 this.ghostState = "idle";
                 this.dangerous = false;
                 //...
             case "chase":
+                this.speed = 2;
                 this.ghostState = "chase";
                 this.dangerous = true;
                 //flip direction
                 //...
             case "scatter":
+                this.speed = 2;
                 this.ghostState = "scatter";
                 this.dangerous = true;
                 //flip direction
                 //...
             case "frightened":
+                this.speed = 1;
                 this.ghostState = "frightened";
                 this.dangerous = false;
                 //flip direction
                 //...
             case "eaten":
+                this.speed = 3;
                 this.ghostState = "eaten";
                 this.dangerous = false;
                 //flip direction

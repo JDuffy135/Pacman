@@ -1,7 +1,6 @@
 package entity;
 
 import main.GamePanel;
-import main.KeyHandler;
 
 import java.awt.*;
 
@@ -78,7 +77,9 @@ public class Blinky extends Entity
         }
         else if (this.ghostState == "scatter")
         {
-            /*  */
+            /* target is set to top right corner */
+            this.targetX = 408;
+            this.targetY = 0;
         }
         else if (this.ghostState == "frightened")
         {
@@ -98,14 +99,9 @@ public class Blinky extends Entity
     @Override
     public void changeDirectionGhost(CollisionHandler cHandler)
     {
-        if (this.ghostState == "chase")
+        if (this.ghostState == "chase" || this.ghostState == "scatter")
         {
-            this.chaseLogic(cHandler);
-        }
-        else if (this.ghostState == "scatter")
-        {
-            //NOTE TO SELF: I think this will end up being the same as chaseLogic
-            this.scatterLogic(cHandler);
+            this.targetChaseLogic(cHandler);
         }
         else if (this.ghostState == "frightened")
         {
@@ -113,7 +109,8 @@ public class Blinky extends Entity
         }
         else if (this.ghostState == "eaten")
         {
-            this.eatenLogic(cHandler); /* code in Entity class */
+            //NOTE: might need to use a different method
+            this.targetChaseLogic(cHandler); /* code in Entity class */
         }
         else if (this.ghostState == "idle")
         {
@@ -121,18 +118,14 @@ public class Blinky extends Entity
         }
     }
 
-    /* chase mode directional changes */
+    /* directional changes for chase, scatter, and eaten mode */
     @Override
-    public void chaseLogic(CollisionHandler cHandler) /* NOTE: currently fucked up */
+    public void targetChaseLogic(CollisionHandler cHandler)
     {
         int right, left, up, down;
         if (this.direction == "up")
         {
             /* checks up, left, and right */
-            //ALGORITHM:
-            //create rectangle offset in particular direction, and set value equal to 9999 if collides with wall
-            //for directions that don't equal 9999, calculate distance to target
-            //choose direction that minimizies distance - if multiple values are equal, go to order of precedence
             down = Integer.MAX_VALUE;
 
             up = checkGhostDirection("up", cHandler);
@@ -259,11 +252,106 @@ public class Blinky extends Entity
         //System.out.println(this.direction);
     }
 
-    /* scatter mode directional changes */
+    /*  */
     @Override
-    public void scatterLogic(CollisionHandler cHandler)
+    public void frightenedLogic(CollisionHandler cHandler)
     {
+        int randNum;
+        String[] directionChoices = {"up", "left", "down", "right"};
+        int[] directionValues = new int[4]; /* each index corresponds to directionChoices index */
 
+        if (this.direction == "up")
+        {
+            /* checks up, left, and right */
+            directionValues[2] = Integer.MAX_VALUE;
+
+            directionValues[0] = checkGhostDirection("up", cHandler);
+            directionValues[1] = checkGhostDirection("left", cHandler);
+            directionValues[3] = checkGhostDirection("right", cHandler);
+        }
+        else if (this.direction == "left")
+        {
+            /* checks left, up, and down */
+            directionValues[3] = Integer.MAX_VALUE;
+
+            directionValues[0] = checkGhostDirection("up", cHandler);
+            directionValues[1] = checkGhostDirection("left", cHandler);
+            directionValues[2] = checkGhostDirection("down", cHandler);
+        }
+        else if (this.direction == "down")
+        {
+            /* checks down, left, and right */
+            directionValues[0] = Integer.MAX_VALUE;
+
+            directionValues[1] = checkGhostDirection("left", cHandler);
+            directionValues[2] = checkGhostDirection("down", cHandler);
+            directionValues[3] = checkGhostDirection("right", cHandler);
+        }
+        else if (this.direction == "right")
+        {
+            /* checks right, up, and down */
+            directionValues[1] = Integer.MAX_VALUE;
+
+            directionValues[0] = checkGhostDirection("up", cHandler);
+            directionValues[2] = checkGhostDirection("down", cHandler);
+            directionValues[3] = checkGhostDirection("right", cHandler);
+        }
+
+        //AFTER DIRECTION VALUES ARE SET...
+
+        /* special intersections where ghosts can't turn up */
+        if ((this.x >= 142 && this.x <= 280 && this.y >= 390 && this.y <= 406) ||
+                (this.x >= 142 && this.x <= 280 && this.y >= 196 && this.y <= 216))
+        {
+            directionValues[0] = Integer.MAX_VALUE;
+        }
+
+        //GENERATE RANDOM NUMBER BETWEEN 1 AND 4: 1 = up, 2 = left, 3 = down, 4 = right
+        randNum = (int)(Math.random() * 4);
+
+        //SET DIRECTION
+        if (directionValues[randNum] < 9999) /* if random direction is valid */
+        {
+            this.lastDirection = this.direction;
+            this.direction = directionChoices[randNum];
+
+            /* if direction changes, cooldown is initiated to prevent ghost from turning around*/
+            if (this.lastDirection.equals(this.direction) == false)
+            {
+                this.movementCooldownTimer++;
+            }
+        }
+        else /* if direction is not valid */
+        {
+            this.lastDirection = this.direction;
+
+            if (directionValues[0] < 9999)
+            {
+                this.direction = directionChoices[0];
+            }
+            else if (directionValues[1] < 9999)
+            {
+                this.direction = directionChoices[1];
+            }
+            else if (directionValues[2] < 9999)
+            {
+                this.direction = directionChoices[2];
+            }
+            else if (directionValues[3] < 9999)
+            {
+                this.direction = directionChoices[3];
+            }
+            else
+            {
+                this.direction = this.direction;
+            }
+
+            /* if direction changes, cooldown is initiated to prevent ghost from turning around*/
+            if (this.lastDirection.equals(this.direction) == false)
+            {
+                this.movementCooldownTimer++;
+            }
+        }
     }
 
     /* main method calls for game loop */
@@ -291,8 +379,6 @@ public class Blinky extends Entity
             }
         }
         gp.cHandler.checkWallCollision(this);
-        //System.out.println("LEFT: " + collisionOnLeft + " RIGHT: " + collisionOnRight + " UP: " + collisionOnUp + " DOWN: " + collisionOnDown);
-        System.out.println("X: " + this.x + " Y: " + this.y);
         this.moveGhost();
 
         //TELEPORT CHECKING
@@ -320,50 +406,63 @@ public class Blinky extends Entity
     {
         image = null;
 
-        switch(direction)
+        /* default sprite animation */
+        if (this.ghostState == "chase" || this.ghostState == "scatter" || this.ghostState == "idle")
         {
-            case "up":
-                if (spriteNum == 1)
-                    image = up1;
-                else if (spriteNum == 2)
-                    image = up2;
-                break;
-            case "down":
-                if (spriteNum == 1)
-                    image = down1;
-                else if (spriteNum == 2)
-                    image = down2;
-                break;
-            case "left":
-                if (spriteNum == 1)
-                    image = left1;
-                else if (spriteNum == 2)
-                    image = left2;
-                break;
-            case "right":
-                if (spriteNum == 1)
-                    image = right1;
-                else if (spriteNum == 2)
-                    image = right2;
-                break;
-            case "stationary":
-                if (lastDirection == "up")
-                {
-                    image = up2;
-                }
-                else if (lastDirection == "down")
-                {
-                    image = down2;
-                }
-                else if (lastDirection == "left")
-                {
-                    image = left2;
-                }
-                else if (lastDirection == "right")
-                {
-                    image = right2;
-                }
+            switch(direction)
+            {
+                case "up":
+                    if (spriteNum == 1)
+                        image = up1;
+                    else if (spriteNum == 2)
+                        image = up2;
+                    break;
+                case "down":
+                    if (spriteNum == 1)
+                        image = down1;
+                    else if (spriteNum == 2)
+                        image = down2;
+                    break;
+                case "left":
+                    if (spriteNum == 1)
+                        image = left1;
+                    else if (spriteNum == 2)
+                        image = left2;
+                    break;
+                case "right":
+                    if (spriteNum == 1)
+                        image = right1;
+                    else if (spriteNum == 2)
+                        image = right2;
+                    break;
+                case "stationary":
+                    if (lastDirection == "up")
+                    {
+                        image = up2;
+                    }
+                    else if (lastDirection == "down")
+                    {
+                        image = down2;
+                    }
+                    else if (lastDirection == "left")
+                    {
+                        image = left2;
+                    }
+                    else if (lastDirection == "right")
+                    {
+                        image = right2;
+                    }
+            }
         }
+        else if (this.ghostState == "frightened")
+        {
+
+        }
+        else if (this.ghostState == "eaten")
+        {
+
+        }
+
 
         g2.drawImage(image, x, y, null);
 
@@ -377,7 +476,7 @@ public class Blinky extends Entity
 //        g2.draw3DRect(this.hitbox.x - 18, this.hitbox.y, hitboxSize + 2, hitboxSize + 2, true);
 //        g2.draw3DRect(this.hitbox.x + 18, this.hitbox.y, hitboxSize + 2, hitboxSize + 2, true);
 
-        /* target visuzlizer - delete eventually */
+        /* target visualizer - delete eventually */
 //        g2.draw3DRect(this.targetX, this.targetY, this.killHitbox.width, this.killHitbox.height, true);
     }
 }
