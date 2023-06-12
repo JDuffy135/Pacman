@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import entity.Entity;
 
 //MAIN CLASS FOR PAINTING BACKGROUNDS AND TEXT
 public class UI
@@ -50,11 +51,13 @@ public class UI
 
     public void draw(Graphics2D g2, ItemCollisionHandler icHandler)
     {
+        /* background */
         g2.drawImage(bg, 0, -8, 448, 576, null);
+
+        /* text and score */
         g2.setFont(primaryFont.deriveFont(20F));
         g2.setColor(Color.white);
         g2.drawString("GAME SCORE", 162, 28);
-
         g2.setFont(primaryFont.deriveFont(16F));
         g2.drawString(String.valueOf(icHandler.score), 320, 27);
     }

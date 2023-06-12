@@ -76,7 +76,7 @@ public class ItemSpawner extends Item
         }
     }
 
-    /* draws pellets and fruits in every frame according to itemBoard */
+    /* draws pellets and fruits in every frame according to itemBoard & deals with bigPelletTimer */
     public void drawItems(Graphics2D g2)
     {
         /* draws fruit if one exists on the screen */
@@ -85,12 +85,27 @@ public class ItemSpawner extends Item
             g2.drawImage(currentFruitImage, 214, 310, null);
         }
 
+        /* changes big pellet image */
+        bigPelletTimer++;
+        if (bigPelletTimer >= 15)
+        {
+            if (currentBigPelletImage == null)
+            {
+                currentBigPelletImage = bigPelletImage;
+            }
+            else
+            {
+                currentBigPelletImage = null;
+            }
+            bigPelletTimer = 0;
+        }
+
         /* draws pellets */
         for (int i = 0 ; i < bigPellets.length ; i++)
         {
             if (bigPellets[i] != null)
             {
-                g2.drawImage(bigPelletImage, bigPellets[i].x, bigPellets[i].y, null);
+                g2.drawImage(currentBigPelletImage, bigPellets[i].x, bigPellets[i].y, null);
 
                 /* visualizing pellet hitboxes - will delete */
                 //g2.draw3DRect(bigPellets[i].hitbox.x, bigPellets[i].hitbox.y, pHitboxSize, pHitboxSize, false);

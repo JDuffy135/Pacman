@@ -113,6 +113,28 @@ public class Blinky extends Entity
         //TELEPORT CHECKING
         this.teleport();
 
+        //FRIGHTENED TIMER CHECKING
+        if (frightenedTimer >= 1)
+        {
+            frightenedTimer++;
+            /* turns frightened mode off after 9 seconds */
+            if (frightenedTimer >= 540)
+            {
+                frightenedTimer = 0;
+                frightenedPointBonus = 200;
+                frightenedPointBonusImage = pts200;
+
+                /* sets all frightened ghosts back to chase state */
+                for (Entity g : ghosts)
+                {
+                    if (g != null && g.ghostState == "frightened")
+                    {
+                        g.changeGhostState("chase");
+                    }
+                }
+            }
+        }
+
         /* adjusts blinky's sprite timer (spriteCounter) for animations */
         spriteCounter++;
         if (spriteCounter > 6)
@@ -186,20 +208,35 @@ public class Blinky extends Entity
         }
         else if (this.ghostState == "frightened") //NOTE: will eventually adjust the blinking so that it mimics actual game mechanics
         {
-            switch(spriteNum)
+            /* blinking starts when 3 seconds left */
+            if (frightenedTimer >= 360)
             {
-                case 1:
+                switch(spriteNum)
+                {
+                    case 1:
+                        image = frightened1;
+                        break;
+                    case 2:
+                        image = frightened2;
+                        break;
+                    case 3:
+                        image = frightenedBlink1;
+                        break;
+                    case 4:
+                        image = frightenedBlink2;
+                        break;
+                }
+            }
+            else
+            {
+                if (spriteNum % 2 != 0)
+                {
                     image = frightened1;
-                    break;
-                case 2:
+                }
+                else
+                {
                     image = frightened2;
-                    break;
-                case 3:
-                    image = frightenedBlink1;
-                    break;
-                case 4:
-                    image = frightenedBlink2;
-                    break;
+                }
             }
         }
         else if (this.ghostState == "eaten")
@@ -239,7 +276,7 @@ public class Blinky extends Entity
         g2.drawImage(image, x, y, null);
 
         /* hitbox visualizer - delete eventually */
-//        g2.draw3DRect(this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height, true);
+        g2.draw3DRect(this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height, true);
 //        g2.draw3DRect(this.killHitbox.x, this.killHitbox.y, this.killHitbox.width, this.killHitbox.height, true);
 
         /* directional hitbox visualizer - delete ventually */

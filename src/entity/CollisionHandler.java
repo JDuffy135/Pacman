@@ -2,6 +2,7 @@ package entity;
 
 import main.GamePanel;
 import java.awt.*;
+import item.ItemCollisionHandler;
 
 public class CollisionHandler extends Entity
 {
@@ -93,5 +94,62 @@ public class CollisionHandler extends Entity
             }
         }
         return false;
+    }
+
+    /* checks for pacman and ghost collisions & handles frightenedPointBonusTimer */
+    public void checkGhostCollision(Entity entity)
+    {
+        /* frightenedPointBonusTimer checking/updating */
+        if (frightenedPointBonusTimer > 0)
+        {
+            frightenedPointBonusTimer++;
+            if (frightenedPointBonusTimer >= 60)
+            {
+                frightenedPointBonusTimer = 0;
+            }
+        }
+
+        //GHOST COLLISION HANDLING
+        for (Entity g : ghosts)
+        {
+            if (g != null && g.killHitbox.intersects(entity.hitbox))
+            {
+                if (g.ghostState == "frightened")
+                {
+                    g.changeGhostState("eaten");
+                    ItemCollisionHandler.score += frightenedPointBonus;
+                    frightenedPointBonusTimer = 1;
+                    if (frightenedPointBonus == 200)
+                    {
+                        frightenedPointBonusImage = pts200;
+                        frightenedPointBonus = 400;
+                    }
+                    else if (frightenedPointBonus == 400)
+                    {
+                        frightenedPointBonusImage = pts400;
+                        frightenedPointBonus = 800;
+                    }
+                    else if (frightenedPointBonus == 800)
+                    {
+                        frightenedPointBonusImage = pts800;
+                        frightenedPointBonus = 800;
+                    }
+                    else if (frightenedPointBonus == 1600)
+                    {
+                        frightenedPointBonusImage = pts1600;
+                        frightenedPointBonus = 200;
+                    }
+
+                    //NOTE: write code to change game state to "paused" for ~40 frames
+                }
+                else if (g.ghostState == "chase" || g.ghostState == "scatter")
+                {
+                    //WRITE CODE FOR THIS STUFF
+                    //decrement pacman lives
+                    //pause for 120 frames
+                    //reset ghosts and pacman (by resetting levelTimer to 0)
+                }
+            }
+        }
     }
 }

@@ -47,10 +47,12 @@ public abstract class Entity
     /* 0 = blinky, 1 = pinky, 2 = inky, 3 = clyde */
 
 
-    //PACMAN CURRENT LEVEL & LEVEL TIMER
+    //PACMAN CURRENT LEVEL & TIMERS
     public static int currentLevel = 1; /* set to 1 by default */
     public static long levelTimer = 0;
     /* NOTE: didn't implement the timer yet ^^ but will be used for changing ghostStates mid-game */
+    public static int frightenedTimer = 0; /* handled in Blinky update() method */
+
 
     //ARRAYLIST CONTAINING ALL WALL OBJECTS
     public static ArrayList<Wall> walls = new ArrayList<Wall>(); //static because only one global walls ArrayList
@@ -65,6 +67,16 @@ public abstract class Entity
     public BufferedImage frightened2 = setupImage("HuntedGhost2", "/ghosts/other/", 24, 24);
     public BufferedImage frightenedBlink1 = setupImage("HuntedGhostBlink1", "/ghosts/other/", 24, 24);
     public BufferedImage frightenedBlink2 = setupImage("HuntedGhostBlink2", "/ghosts/other/", 24, 24);
+
+
+    //FRIGHTENED POINT BONUS AND POINT BONUS IMAGES
+    public static int frightenedPointBonus = 200;
+    public static int frightenedPointBonusTimer = 0;
+    public static BufferedImage frightenedPointBonusImage = null;
+    public BufferedImage pts200 = setupImage("200pts", "/misc/", 32, 32);
+    public BufferedImage pts400 = setupImage("400pts", "/misc/", 32, 32);
+    public BufferedImage pts800 = setupImage("800pts", "/misc/", 32, 32);
+    public BufferedImage pts1600 = setupImage("1600pts", "/misc/", 32, 32);
 
 
 

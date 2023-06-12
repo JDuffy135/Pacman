@@ -114,11 +114,14 @@ public class GamePanel extends JPanel implements Runnable
         itemSpawner.fruitCheck();
         if (itemSpawner.fruitPresent == true) { itemSpawner.updateFruitTimer(); }
 
-        //UPDATES PACMAN ENTITY AND DEALS WITH PLAYER COLLISIONS
+        //UPDATES PACMAN & HANDLES WALL AND GHOST COLLISIONS
         pacman.update();
-        if (Entity.levelTimer >= 180) /* currently here for debugging */
+
+        //UPDATES GHOSTS
+        if (Entity.levelTimer >= 180) /* timer delay currently here for debugging */
         {
             blinky.update();
+            //...
         }
     }
 
@@ -137,7 +140,7 @@ public class GamePanel extends JPanel implements Runnable
         //...
 
 
-        //GAME BOARD AND PELLETS/FRUITS
+        //BACKGROUND, TEXT, GAME BOARD AND PELLETS/FRUITS
         ui.draw(g2, icHandler);
         itemSpawner.drawItems(g2);
         //wallSpawner.paintWalls(g2); /* for debugging */

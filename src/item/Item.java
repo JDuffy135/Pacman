@@ -35,8 +35,12 @@ public abstract class Item
     public BufferedImage smallPelletImage = getImage("SmallPellet", pSize, pSize);
     public BufferedImage bigPelletImage = getImage("LargePellet", pSize, pSize);
 
-    /* used for displaying the current fruit */
+    /* timer for changing big pellet image */
+    public static int bigPelletTimer = 0;
+
+    /* used for displaying the current fruit & big pellet */
     public static BufferedImage currentFruitImage = null;
+    public static BufferedImage currentBigPelletImage = null; /* big pellets flash between null and bigPelletImage */
 
     /* all fruit images scaled once for performance optimization */
     public BufferedImage cherriesImage = getImage("Cherries", fruitSize, fruitSize);

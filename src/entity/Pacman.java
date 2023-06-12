@@ -123,6 +123,7 @@ public class Pacman extends Entity
 
         //WALL AND ITEM COLLISION HANDLING & PACMAN MOVEMENT
         gp.cHandler.checkWallCollision(this);
+        gp.cHandler.checkGhostCollision(this); /* deals with ghost collisions and frightened timer / point bonus stuff */
         gp.icHandler.checkItemCollision(this);
         this.move();
 
@@ -151,49 +152,57 @@ public class Pacman extends Entity
     {
         image = null;
 
-        switch(direction)
+        /* image is set to frightenedPointBonusImage if a fightened ghost is eaten */
+        if (frightenedPointBonusTimer > 0)
         {
-            case "up":
-                if (spriteNum == 1)
-                    image = up1;
-                else if (spriteNum == 2)
-                    image = up2;
-                break;
-            case "down":
-                if (spriteNum == 1)
-                    image = down1;
-                else if (spriteNum == 2)
-                    image = down2;
-                break;
-            case "left":
-                if (spriteNum == 1)
-                    image = left1;
-                else if (spriteNum == 2)
-                    image = left2;
-                break;
-            case "right":
-                if (spriteNum == 1)
-                    image = right1;
-                else if (spriteNum == 2)
-                    image = right2;
-                break;
-            case "stationary":
-                if (lastDirection == "up")
-                {
-                    image = up2;
-                }
-                else if (lastDirection == "down")
-                {
-                    image = down2;
-                }
-                else if (lastDirection == "left")
-                {
-                    image = left2;
-                }
-                else if (lastDirection == "right")
-                {
-                    image = right2;
-                }
+            image = frightenedPointBonusImage;
+        }
+        else
+        {
+            switch(direction)
+            {
+                case "up":
+                    if (spriteNum == 1)
+                        image = up1;
+                    else if (spriteNum == 2)
+                        image = up2;
+                    break;
+                case "down":
+                    if (spriteNum == 1)
+                        image = down1;
+                    else if (spriteNum == 2)
+                        image = down2;
+                    break;
+                case "left":
+                    if (spriteNum == 1)
+                        image = left1;
+                    else if (spriteNum == 2)
+                        image = left2;
+                    break;
+                case "right":
+                    if (spriteNum == 1)
+                        image = right1;
+                    else if (spriteNum == 2)
+                        image = right2;
+                    break;
+                case "stationary":
+                    if (lastDirection == "up")
+                    {
+                        image = up2;
+                    }
+                    else if (lastDirection == "down")
+                    {
+                        image = down2;
+                    }
+                    else if (lastDirection == "left")
+                    {
+                        image = left2;
+                    }
+                    else if (lastDirection == "right")
+                    {
+                        image = right2;
+                    }
+            }
         }
 
         g2.drawImage(image, x, y, null);

@@ -19,6 +19,7 @@ public class ItemCollisionHandler extends Item
 
 
     /* checks if the given entity (pacman) is touching an item, and updates if collision is detected */
+    /* also changes ghosts to "frightened" state when a big pellet is eaten */
     public void checkItemCollision(Entity entity)
     {
         /* Fruit */
@@ -41,6 +42,14 @@ public class ItemCollisionHandler extends Item
                     p.y = -5000;
                     score += p.points;
                     pelletsEaten++;
+
+                    /* change ghosts to frightened mode and resets frightenedTimer */
+                    for (Entity g : entity.ghosts)
+                    {
+                        if (g != null) { g.changeGhostState("frightened"); }
+                    }
+                    /* NOTE: frightenedTimer handled in Blinky update() method */
+                    Entity.frightenedTimer = 1;
                 }
             }
         }
