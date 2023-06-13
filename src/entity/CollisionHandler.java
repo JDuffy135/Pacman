@@ -132,7 +132,7 @@ public class CollisionHandler extends Entity
                     else if (frightenedPointBonus == 800)
                     {
                         frightenedPointBonusImage = pts800;
-                        frightenedPointBonus = 800;
+                        frightenedPointBonus = 1600;
                     }
                     else if (frightenedPointBonus == 1600)
                     {
@@ -140,7 +140,7 @@ public class CollisionHandler extends Entity
                         frightenedPointBonus = 200;
                     }
 
-                    //NOTE: write code to change game state to "paused" for ~40 frames
+                    //NOTE: write code to change game state to "paused" for ~40 frames...?
                 }
                 else if (g.ghostState == "chase" || g.ghostState == "scatter")
                 {

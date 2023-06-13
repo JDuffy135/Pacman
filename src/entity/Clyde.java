@@ -3,11 +3,11 @@ package entity;
 import main.GamePanel;
 import java.awt.*;
 
-public class Blinky extends Entity
+public class Clyde extends Entity
 {
 //    GamePanel gp;
 
-    public Blinky(GamePanel gp)
+    public Clyde(GamePanel gp)
     {
         this.gp = gp;
         x = 0;
@@ -21,8 +21,8 @@ public class Blinky extends Entity
         direction = "";
         lastDirection = "";
 
-        ghostState = "chase"; /* default: chase (idle for other ghosts) */
-        idleTime = 0;
+        ghostState = "idle"; /* default: idle */
+        idleTime = 480 + 360 + 360; /* idles for 6 seconds after inky (20 seconds) */
 
         setDefaultValues();
         getImages();
@@ -33,33 +33,33 @@ public class Blinky extends Entity
         movementCooldownTimer = 0;
         wallImmunity = false;
 
-        ghosts[0] = this;
+        ghosts[3] = this;
     }
 
-    /* sets default values for Blinky */
+    /* sets default values for Clyde */
     @Override
     public void setDefaultValues()
     {
-        this.x = 212; /* default: 212 */
-        this.y = 212; /* default: 212 */
-        this.speed = 2;
+        this.x = 244; /* default: 244 */
+        this.y = 260; /* default: 260 */
+        this.speed = 1;
 
-        this.direction = "left"; /* default: left */
-        this.lastDirection = "left"; /* default: left */
+        this.direction = "down"; /* default: down */
+        this.lastDirection = "down"; /* default: down */
     }
 
-    /* sets up the images for Blinky */
+    /* sets up the images for Clyde */
     @Override
     public void getImages()
     {
-        up1 = setupImage("BlinkyUp1", "/ghosts/blinky/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        up2 = setupImage("BlinkyUp2", "/ghosts/blinky/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        down1 = setupImage("BlinkyDown1", "/ghosts/blinky/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        down2 = setupImage("BlinkyDown2", "/ghosts/blinky/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        right1 = setupImage("BlinkyRight1", "/ghosts/blinky/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        right2 = setupImage("BlinkyRight2", "/ghosts/blinky/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        left1 = setupImage("BlinkyLeft1", "/ghosts/blinky/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        left2 = setupImage("BlinkyLeft2", "/ghosts/blinky/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        up1 = setupImage("ClydeUp1", "/ghosts/clyde/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        up2 = setupImage("ClydeUp2", "/ghosts/clyde/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        down1 = setupImage("ClydeDown1", "/ghosts/clyde/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        down2 = setupImage("ClydeDown2", "/ghosts/clyde/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        right1 = setupImage("ClydeRight1", "/ghosts/clyde/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        right2 = setupImage("ClydeRight2", "/ghosts/clyde/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        left1 = setupImage("ClydeLeft1", "/ghosts/clyde/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        left2 = setupImage("ClydeLeft2", "/ghosts/clyde/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
     }
 
     /* calculates ghost's target position */
@@ -68,28 +68,35 @@ public class Blinky extends Entity
     {
         if (this.ghostState == "chase")
         {
-            /* target is set to center of pacman's hitbox */
-            this.targetX = gp.pacman.hitbox.x + gp.pacman.hitbox.width/2;
-            this.targetY = gp.pacman.hitbox.y + gp.pacman.hitbox.height/2;
+            /* targets pacman while more than 128 pixels away from him - scatters when within range */
+            if (((gp.pacman.x + gp.pacman.hitbox.width/2) - (this.x + this.hitbox.width/2)) > 128 ||
+                    ((gp.pacman.y + gp.pacman.hitbox.height/2) - (this.y + this.hitbox.height/2)) > 128)
+            {
+                this.targetX = gp.pacman.hitbox.x + gp.pacman.hitbox.width/2;
+                this.targetY = gp.pacman.hitbox.y + gp.pacman.hitbox.height/2;
+            }
+            else
+            {
+                this.targetX = 0;
+                this.targetY = 524;
+            }
         }
         else if (this.ghostState == "scatter")
         {
-            /* target is set to top right corner */
-            this.targetX = 408;
-            this.targetY = 0;
+            /* target is set to bottom left corner */
+            this.targetX = 0;
+            this.targetY = 524;
         }
-        else if (this.ghostState == "eaten")
+        else if (this.ghostState == "eaten" || this.ghostState == "idleExit")
         {
             /* target is set to area right above ghost house */
             this.targetX = 224;
             this.targetY = 256;
         }
 
-        /* no target for frightened, idle, or idleExit mode */
+        /* no target for frightened or idle mode */
     }
 
-
-    /* main method calls for game loop */
     @Override
     public void update()
     {
@@ -111,29 +118,13 @@ public class Blinky extends Entity
         //TELEPORT CHECKING
         this.teleport();
 
-        //FRIGHTENED TIMER CHECKING
-        if (frightenedTimer >= 1)
+        //IDLE EXIT CHECKING
+        if (levelTimer >= this.idleTime && this.ghostState == "idle")
         {
-            frightenedTimer++;
-            /* turns frightened mode off after 9 seconds */
-            if (frightenedTimer >= 540)
-            {
-                frightenedTimer = 0;
-                frightenedPointBonus = 200;
-                frightenedPointBonusImage = pts200;
-
-                /* sets all frightened ghosts back to chase state */
-                for (Entity g : ghosts)
-                {
-                    if (g != null && g.ghostState == "frightened")
-                    {
-                        g.changeGhostState("chase");
-                    }
-                }
-            }
+            this.changeGhostState("idleExit");
         }
 
-        /* adjusts blinky's sprite timer (spriteCounter) for animations */
+        /* adjusts pinky's sprite timer (spriteCounter) for animations */
         spriteCounter++;
         if (spriteCounter > 6)
         {
@@ -149,7 +140,7 @@ public class Blinky extends Entity
         }
     }
 
-    /* graphics for Blinky in game loop */
+    /* graphics for Clyde in game loop */
     @Override
     public void draw(Graphics2D g2)
     {

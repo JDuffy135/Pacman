@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class Pacman extends Entity
 {
-    GamePanel gp;
+//    GamePanel gp;
     KeyHandler keyH;
 
     /* Pacman constructor */

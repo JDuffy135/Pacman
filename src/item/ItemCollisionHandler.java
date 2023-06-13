@@ -46,7 +46,10 @@ public class ItemCollisionHandler extends Item
                     /* change ghosts to frightened mode and resets frightenedTimer */
                     for (Entity g : entity.ghosts)
                     {
-                        if (g != null) { g.changeGhostState("frightened"); }
+                        if (g != null && (g.ghostState == "chase" || g.ghostState == "scatter"))
+                        {
+                            g.changeGhostState("frightened");
+                        }
                     }
                     /* NOTE: frightenedTimer handled in Blinky update() method */
                     Entity.frightenedTimer = 1;

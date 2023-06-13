@@ -33,7 +33,10 @@ public class GamePanel extends JPanel implements Runnable
 
     //SPRITES
     public Pacman pacman = new Pacman(this, keyH);
-    Blinky blinky = new Blinky(this);
+    public Blinky blinky = new Blinky(this);
+    public Pinky pinky = new Pinky(this);
+    public Inky inky = new Inky(this);
+    public Clyde clyde = new Clyde(this);
 
     //GAME STATE
     public int gameState;
@@ -121,7 +124,9 @@ public class GamePanel extends JPanel implements Runnable
         if (Entity.levelTimer >= 180) /* timer delay currently here for debugging */
         {
             blinky.update();
-            //...
+            pinky.update();
+            inky.update();
+            clyde.update();
         }
     }
 
@@ -158,11 +163,12 @@ public class GamePanel extends JPanel implements Runnable
 
         //PLAYER
         pacman.draw(g2);
-        blinky.draw(g2);
-
 
         //GHOSTS
-        //...
+        blinky.draw(g2);
+        pinky.draw(g2);
+        inky.draw(g2);
+        clyde.draw(g2);
 
 
         //DEBUG CONTINUED

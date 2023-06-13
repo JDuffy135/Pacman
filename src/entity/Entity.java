@@ -8,11 +8,13 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import main.GamePanel;
+import main.Main;
 
 //MASTER CLASS FOR ALL ENTITIES/SPRITES
 public abstract class Entity
 {
     //ENTITY ATTRIBUTES
+    GamePanel gp;
     public final int hitboxOffset = 0; /* currently no point in having this here, just leaving it in case I need it again for whatever reason */
     public final int hitboxSize = 24; //same as gp.displayedTileSize + 8
     public boolean collisionOnRight = false;
@@ -33,7 +35,7 @@ public abstract class Entity
 
 
     //GHOST ONLY ATTRIBUTES
-    public String ghostState; /* "idle" "chase" "scatter" "frightened" and "eaten" modes exist */
+    public String ghostState; /* "idle" "idleExit" "chase" "scatter" "frightened" and "eaten" modes exist */
     public long idleTime; /* time ghost idles before spawning at start of level */
     public Rectangle killHitbox; /* when this hitbox intersects pacman's hitbox he loses a life */
     public int targetX;
@@ -259,6 +261,27 @@ public abstract class Entity
             else if (this.ghostState == "idle")
             {
                 this.idleLogic(cHandler); /* code in Entity class */
+            }
+            else if (this.ghostState == "idleExit")
+            {
+                if (this.x < 210)
+                {
+                    this.direction = "right";
+                }
+                else if (this.x > 215)
+                {
+                    this.direction = "left";
+                }
+                else if (this.x >= 210 && this.x <= 215)
+                {
+                    this.direction = "up";
+                }
+
+                if (this.y <= 216)
+                {
+                    this.direction = "right";
+                    changeGhostState("chase");
+                }
             }
         }
         else
@@ -571,27 +594,65 @@ public abstract class Entity
                 this.wallImmunity = false;
                 flipDirection();
                 break;
+            case "idleExit":
+                this.speed = 1;
+                this.ghostState = "idleExit";
+                this.wallImmunity = true;
+                break;
         }
     }
 
-    /* flips direction 180 degrees */
+    /* flips direction 180 degrees if doesn't result in wall collision */
     public void flipDirection()
     {
+        Rectangle rect;
         if (this.direction == "up")
         {
-            this.direction = "down";
+            rect = new Rectangle(this.x, this.y + 4, this.hitbox.width, this.hitbox.height);
+            if (this.gp.cHandler.checkForIntersectionsBool(this, rect) == false)
+            {
+                this.direction = "down";
+            }
+            else
+            {
+                this.frightenedLogic(this.gp.cHandler);
+            }
         }
         else if (this.direction == "left")
         {
-            this.direction = "right";
+            rect = new Rectangle(this.x + 4, this.y, this.hitbox.width, this.hitbox.height);
+            if (this.gp.cHandler.checkForIntersectionsBool(this, rect) == false)
+            {
+                this.direction = "right";
+            }
+            else
+            {
+                this.frightenedLogic(this.gp.cHandler);
+            }
         }
         else if (this.direction == "down")
         {
-            this.direction = "up";
+            rect = new Rectangle(this.x, this.y - 4, this.hitbox.width, this.hitbox.height);
+            if (this.gp.cHandler.checkForIntersectionsBool(this, rect) == false)
+            {
+                this.direction = "up";
+            }
+            else
+            {
+                this.frightenedLogic(this.gp.cHandler);
+            }
         }
         else if (this.direction == "right")
         {
-            this.direction = "left";
+            rect = new Rectangle(this.x - 4, this.y, this.hitbox.width, this.hitbox.height);
+            if (this.gp.cHandler.checkForIntersectionsBool(this, rect) == false)
+            {
+                this.direction = "left";
+            }
+            else
+            {
+                this.frightenedLogic(this.gp.cHandler);
+            }
         }
     }
 
