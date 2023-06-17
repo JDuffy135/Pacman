@@ -5,8 +5,14 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener
 {
+    GamePanel gp;
     public boolean upPressed, downPressed, leftPressed, rightPressed = false;
     public static boolean keyPressed = false;
+
+    public KeyHandler(GamePanel gp)
+    {
+       this.gp = gp;
+    }
 
     @Override
     public void keyTyped(KeyEvent e)
@@ -25,7 +31,6 @@ public class KeyHandler implements KeyListener
             downPressed = false;
             leftPressed = false;
             rightPressed = false;
-
             upPressed = true;
         }
         if (code == KeyEvent.VK_S) /* down */
@@ -33,7 +38,6 @@ public class KeyHandler implements KeyListener
             upPressed = false;
             leftPressed = false;
             rightPressed = false;
-
             downPressed = true;
         }
         if (code == KeyEvent.VK_A) /* left */
@@ -41,7 +45,6 @@ public class KeyHandler implements KeyListener
             downPressed = false;
             upPressed = false;
             rightPressed = false;
-
             leftPressed = true;
         }
         if (code == KeyEvent.VK_D) /* right */
@@ -49,7 +52,6 @@ public class KeyHandler implements KeyListener
             downPressed = false;
             upPressed = false;
             leftPressed = false;
-
             rightPressed = true;
         }
     }

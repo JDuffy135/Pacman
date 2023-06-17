@@ -103,7 +103,7 @@ public class CollisionHandler extends Entity
         if (frightenedPointBonusTimer > 0)
         {
             frightenedPointBonusTimer++;
-            if (frightenedPointBonusTimer >= 60)
+            if (frightenedPointBonusTimer >= 40)
             {
                 frightenedPointBonusTimer = 0;
             }

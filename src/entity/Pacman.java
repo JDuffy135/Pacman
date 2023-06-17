@@ -61,7 +61,7 @@ public class Pacman extends Entity
         left2 = setupImage("PacmanLeftClosed", "/pacman/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
     }
 
-    /* changes pacman direction based on keyboard input */
+    /* changes pacman direction based on keyboard input and adjusts keyPressed value */
     @Override
     public void changeDirectionPacman(CollisionHandler cHandler)
     {
@@ -119,7 +119,10 @@ public class Pacman extends Entity
         this.collisionOnDown = false;
 
         //DIRECTION CHANGING BASED ON KEYBOARD INPUT
-        if (KeyHandler.keyPressed == true) { this.changeDirectionPacman(gp.cHandler); }
+        if (KeyHandler.keyPressed == true)
+        {
+            this.changeDirectionPacman(gp.cHandler);
+        }
 
         //WALL AND ITEM COLLISION HANDLING & PACMAN MOVEMENT
         gp.cHandler.checkWallCollision(this);

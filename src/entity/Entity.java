@@ -37,6 +37,7 @@ public abstract class Entity
     //GHOST ONLY ATTRIBUTES
     public String ghostState; /* "idle" "idleExit" "chase" "scatter" "frightened" and "eaten" modes exist */
     public long idleTime; /* time ghost idles before spawning at start of level */
+    public int frightenedTag; /* set to 1 if a ghost is eaten so it doesn't enter frightened mode again */
     public Rectangle killHitbox; /* when this hitbox intersects pacman's hitbox he loses a life */
     public int targetX;
     public int targetY;
@@ -49,8 +50,9 @@ public abstract class Entity
     /* 0 = blinky, 1 = pinky, 2 = inky, 3 = clyde */
 
 
-    //PACMAN CURRENT LEVEL & TIMERS
+    //PACMAN CURRENT LEVEL, LIVES & TIMERS
     public static int currentLevel = 1; /* set to 1 by default */
+    public static int lives = 3; /* set to 3 by default */
     public static long levelTimer = 0;
     /* NOTE: didn't implement the timer yet ^^ but will be used for changing ghostStates mid-game */
     public static int frightenedTimer = 0; /* handled in Blinky update() method */
@@ -190,13 +192,13 @@ public abstract class Entity
     /* used for pacman and ghosts */
     public void teleport()
     {
-        if (this.x <= -24)
+        if (this.x <= -22)
         {
-            this.x = 468;
+            this.x = 466;
         }
-        if (this.x >= 470)
+        if (this.x >= 468)
         {
-            this.x = -22;
+            this.x = -20;
         }
     }
 
@@ -229,38 +231,56 @@ public abstract class Entity
             }
             else if (this.ghostState == "eaten")
             {
-                /* else-if latter is the code for the entering/exiting sequence in/out of the ghost house */
+                /* goes into ghost house when in this position on map */
                 if (this.wallImmunity == false && (this.x >= 210 && this.x <= 215) && (this.y >= 208 && this.y <= 216))
                 {
                     this.wallImmunity = true;
                     this.speed = 1;
                     this.direction = "down";
                 }
-                else if (this.wallImmunity == true && this.direction == "down")
+                else if (this.wallImmunity == true)
                 {
                     /* if in ghost house */
                     if (this.y >= 260)
                     {
-                        this.direction = "up";
+                        if (this.equals(ghosts[0])) /* Blinky */
+                        {
+                            changeGhostState("idleExit");
+                        }
+                        else if (this.equals(ghosts[1])) /* Pinky */
+                        {
+                            changeGhostState("idle");
+                        }
+                        else if (this.equals(ghosts[2])) /* Inky */
+                        {
+                            this.direction = "left";
+                            if (this.x <= 180)
+                            {
+//                                this.direction = "up";
+//                                changeGhostState("idle");
+                                changeGhostState("idleExit");
+                            }
+                        }
+                        else if (this.equals(ghosts[3])) /* Clyde */
+                        {
+                            this.direction = "right";
+                            if (this.x >= 244)
+                            {
+//                                this.direction = "up";
+//                                changeGhostState("idle");
+                                changeGhostState("idleExit");
+                            }
+                        }
                     }
                 }
-                else if (this.wallImmunity == true && this.direction == "up")
-                {
-                    if (this.y <= 212)
-                    {
-                        this.wallImmunity = false;
-                        this.direction = "right";
-                        this.changeGhostState("chase");
-                    }
-                }
-                else
+                else /* target is at entrance to ghost house */
                 {
                     this.targetChaseLogic(cHandler);
                 }
             }
             else if (this.ghostState == "idle")
             {
-                this.idleLogic(cHandler); /* code in Entity class */
+                this.idleLogic(cHandler);
             }
             else if (this.ghostState == "idleExit")
             {
@@ -280,7 +300,14 @@ public abstract class Entity
                 if (this.y <= 216)
                 {
                     this.direction = "right";
-                    changeGhostState("chase");
+                    if (frightenedTimer >= 1 && this.frightenedTag == 0)
+                    {
+                        changeGhostState("frightened");
+                    }
+                    else
+                    {
+                        changeGhostState("chase");
+                    }
                 }
             }
         }
@@ -567,7 +594,10 @@ public abstract class Entity
             case "idle":
                 this.speed = 1;
                 this.ghostState = "idle";
-                this.direction = "down";
+                if (this.direction != "up" && this.direction != "down")
+                {
+                    this.direction = "down";
+                }
                 this.wallImmunity = true;
                 break;
             case "chase":
@@ -592,6 +622,7 @@ public abstract class Entity
                 this.speed = 3;
                 this.ghostState = "eaten";
                 this.wallImmunity = false;
+                this.frightenedTag = 1;
                 flipDirection();
                 break;
             case "idleExit":
@@ -608,7 +639,7 @@ public abstract class Entity
         Rectangle rect;
         if (this.direction == "up")
         {
-            rect = new Rectangle(this.x, this.y + 4, this.hitbox.width, this.hitbox.height);
+            rect = new Rectangle(this.x, this.y + 8, this.hitbox.width, this.hitbox.height);
             if (this.gp.cHandler.checkForIntersectionsBool(this, rect) == false)
             {
                 this.direction = "down";
@@ -620,7 +651,7 @@ public abstract class Entity
         }
         else if (this.direction == "left")
         {
-            rect = new Rectangle(this.x + 4, this.y, this.hitbox.width, this.hitbox.height);
+            rect = new Rectangle(this.x + 8, this.y, this.hitbox.width, this.hitbox.height);
             if (this.gp.cHandler.checkForIntersectionsBool(this, rect) == false)
             {
                 this.direction = "right";
@@ -632,7 +663,7 @@ public abstract class Entity
         }
         else if (this.direction == "down")
         {
-            rect = new Rectangle(this.x, this.y - 4, this.hitbox.width, this.hitbox.height);
+            rect = new Rectangle(this.x, this.y - 8, this.hitbox.width, this.hitbox.height);
             if (this.gp.cHandler.checkForIntersectionsBool(this, rect) == false)
             {
                 this.direction = "up";
@@ -644,7 +675,7 @@ public abstract class Entity
         }
         else if (this.direction == "right")
         {
-            rect = new Rectangle(this.x - 4, this.y, this.hitbox.width, this.hitbox.height);
+            rect = new Rectangle(this.x - 8, this.y, this.hitbox.width, this.hitbox.height);
             if (this.gp.cHandler.checkForIntersectionsBool(this, rect) == false)
             {
                 this.direction = "left";

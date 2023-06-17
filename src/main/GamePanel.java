@@ -2,7 +2,6 @@ package main;
 
 import javax.swing.JPanel;
 import java.awt.*;
-
 import entity.*;
 import item.ItemCollisionHandler;
 import item.ItemSpawner;
@@ -20,7 +19,7 @@ public class GamePanel extends JPanel implements Runnable
     final int screenHeight = displayedTileSize * verticalTileCount; /* 576 pixels */
 
     //SYSTEM
-    KeyHandler keyH = new KeyHandler();
+    KeyHandler keyH = new KeyHandler(this);
     Thread gameThread;
     public UI ui = new UI(this);
     public CollisionHandler cHandler = new CollisionHandler(this);
@@ -39,9 +38,13 @@ public class GamePanel extends JPanel implements Runnable
     public Clyde clyde = new Clyde(this);
 
     //GAME STATE
-    public int gameState;
-    public final int menuState = 0;
-    public final int playState = 1;
+    public static int gameState = 1; /* 0 BY DEFAULT */
+    public final int START_STATE = 0; /* startup sequence */
+    public final int PLAY_STATE = 1; /* gameplay state */
+    public final int EATGHOST_STATE = 2; /* game pauses temporarily when a ghost is eaten */
+    public final int LOSELIFE_STATE = 3; /* game pauses temporarily and sprite positions are reset */
+    public final int BOARDRESET_STATE = 4; /* board reset sequence */
+    public final int GAMEOVER_STATE = 5; /* gameover screen */
 
 
     //TEMPORARY VARIABLES FOR TESTING
@@ -105,9 +108,34 @@ public class GamePanel extends JPanel implements Runnable
         }
     }
 
-    /* updates sprites and values */
+    //MAIN UPDATE METHOD: updates game values in game loop
     public void update()
     {
+        switch (gameState)
+        {
+            case START_STATE:
+                //...
+                break;
+            case PLAY_STATE:
+                updatePlayState();
+                break;
+            case EATGHOST_STATE:
+                //...
+                break;
+                //TO BE CONTINUED
+        }
+    }
+
+    /* called by gameloop "update()" method when gameState == START_STATE */
+    public void updateStartState()
+    {
+
+    }
+
+    /* called by gameloop "update()" method when gameState == PLAY_STATE */
+    public void updatePlayState()
+    {
+        //LEVEL TIMER
         Entity.levelTimer++;
 
         //CHECKS IF ALL PELLETS EATEN
@@ -115,7 +143,10 @@ public class GamePanel extends JPanel implements Runnable
 
         //DEALS WITH FRUIT SPAWNING
         itemSpawner.fruitCheck();
-        if (itemSpawner.fruitPresent == true) { itemSpawner.updateFruitTimer(); }
+        if (itemSpawner.fruitPresent == true)
+        {
+            itemSpawner.updateFruitTimer();
+        }
 
         //UPDATES PACMAN & HANDLES WALL AND GHOST COLLISIONS
         pacman.update();
@@ -130,6 +161,7 @@ public class GamePanel extends JPanel implements Runnable
         }
     }
 
+    //MAIN DRAW METHOD: paints objects on screen
     @Override
     public void paintComponent(Graphics g) /* updates screen and images */
     {

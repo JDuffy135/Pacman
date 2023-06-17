@@ -43,7 +43,7 @@ public class ItemCollisionHandler extends Item
                     score += p.points;
                     pelletsEaten++;
 
-                    /* change ghosts to frightened mode and resets frightenedTimer */
+                    /* change ghosts to frightened mode and resets frightenedTimer and point bonus */
                     for (Entity g : entity.ghosts)
                     {
                         if (g != null && (g.ghostState == "chase" || g.ghostState == "scatter"))
@@ -53,6 +53,7 @@ public class ItemCollisionHandler extends Item
                     }
                     /* NOTE: frightenedTimer handled in Blinky update() method */
                     Entity.frightenedTimer = 1;
+                    Entity.frightenedPointBonus = 200;
                 }
             }
         }

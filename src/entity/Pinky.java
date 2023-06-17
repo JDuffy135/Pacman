@@ -23,6 +23,7 @@ public class Pinky extends Entity
 
         ghostState = "idle"; /* default: idle */
         idleTime = 480; /* idles for 8 seconds */
+        frightenedTag = 0;
 
         setDefaultValues();
         getImages();
@@ -155,9 +156,74 @@ public class Pinky extends Entity
     {
         image = null;
 
-        /* default sprite animation */
-        if (this.ghostState == "chase" || this.ghostState == "scatter" || this.ghostState == "idle" ||
-                this.ghostState == "idleExit" || (this.ghostState == "eaten" && this.wallImmunity == true && this.direction != "down"))
+        /* eaten sprite animation */
+        if (this.ghostState == "eaten")
+        {
+            switch (direction)
+            {
+                case "up":
+                    image = eyesUp;
+                    break;
+                case "down":
+                    image = eyesDown;
+                    break;
+                case "left":
+                    image = eyesLeft;
+                    break;
+                case "right":
+                    image = eyesRight;
+                    break;
+                case "stationary":
+                    if (lastDirection == "up")
+                    {
+                        image = eyesUp;
+                    } else if (lastDirection == "down")
+                    {
+                        image = eyesDown;
+                    } else if (lastDirection == "left")
+                    {
+                        image = eyesLeft;
+                    } else if (lastDirection == "right")
+                    {
+                        image = eyesRight;
+                    }
+                    break;
+            }
+        }
+        else if (this.ghostState == "frightened" || (frightenedTimer >= 1 && this.frightenedTag == 0)) /* blue ghost animation */
+        {
+            /* blinking starts when 3 seconds left */
+            if (frightenedTimer >= 360)
+            {
+                switch(spriteNum)
+                {
+                    case 1:
+                        image = frightened1;
+                        break;
+                    case 2:
+                        image = frightened2;
+                        break;
+                    case 3:
+                        image = frightenedBlink1;
+                        break;
+                    case 4:
+                        image = frightenedBlink2;
+                        break;
+                }
+            }
+            else
+            {
+                if (spriteNum % 2 != 0)
+                {
+                    image = frightened1;
+                }
+                else
+                {
+                    image = frightened2;
+                }
+            }
+        }
+        else /* normal ghost animation */
         {
             switch(direction)
             {
@@ -201,72 +267,6 @@ public class Pinky extends Entity
                     else if (lastDirection == "right")
                     {
                         image = right2;
-                    }
-                    break;
-            }
-        }
-        else if (this.ghostState == "frightened")
-        {
-            /* blinking starts when 3 seconds left */
-            if (frightenedTimer >= 360)
-            {
-                switch(spriteNum)
-                {
-                    case 1:
-                        image = frightened1;
-                        break;
-                    case 2:
-                        image = frightened2;
-                        break;
-                    case 3:
-                        image = frightenedBlink1;
-                        break;
-                    case 4:
-                        image = frightenedBlink2;
-                        break;
-                }
-            }
-            else
-            {
-                if (spriteNum % 2 != 0)
-                {
-                    image = frightened1;
-                }
-                else
-                {
-                    image = frightened2;
-                }
-            }
-        }
-        else if (this.ghostState == "eaten")
-        {
-            switch (direction)
-            {
-                case "up":
-                    image = eyesUp;
-                    break;
-                case "down":
-                    image = eyesDown;
-                    break;
-                case "left":
-                    image = eyesLeft;
-                    break;
-                case "right":
-                    image = eyesRight;
-                    break;
-                case "stationary":
-                    if (lastDirection == "up")
-                    {
-                        image = eyesUp;
-                    } else if (lastDirection == "down")
-                    {
-                        image = eyesDown;
-                    } else if (lastDirection == "left")
-                    {
-                        image = eyesLeft;
-                    } else if (lastDirection == "right")
-                    {
-                        image = eyesRight;
                     }
                     break;
             }
