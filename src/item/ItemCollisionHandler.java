@@ -46,6 +46,7 @@ public class ItemCollisionHandler extends Item
                     /* change ghosts to frightened mode and resets frightenedTimer and point bonus */
                     for (Entity g : entity.ghosts)
                     {
+                        g.frightenedTag = 0;
                         if (g != null && (g.ghostState == "chase" || g.ghostState == "scatter"))
                         {
                             g.changeGhostState("frightened");
@@ -73,7 +74,7 @@ public class ItemCollisionHandler extends Item
         }
     }
 
-    /* checks to see if all the pellets are eaten */
+    /* checks to see if all the pellets are eaten - adjusts pelletsEaten, currentLevel, and gameState accordingly */
     public void checkIfWon()
     {
         if (pelletsEaten >= 244)
@@ -84,8 +85,7 @@ public class ItemCollisionHandler extends Item
             {
                 ItemSpawner.deleteFruit();
             }
-            /* change game state and whatnot, because if code reaches this point, all pellets were eaten */
-            System.out.println("YOU WON"); /* temp test */
+            gp.changeGameState(gp.WIN_STATE);
         }
     }
 }

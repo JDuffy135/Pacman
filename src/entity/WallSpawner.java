@@ -71,9 +71,9 @@ public class WallSpawner extends Entity
         walls.add(teleportBarrier1);
         Wall teleportBarrier2 = new Wall(gp, 464, 240);
         walls.add(teleportBarrier2);
-        Wall teleportBarrier3 = new Wall(gp, -28, 288);
+        Wall teleportBarrier3 = new Wall(gp, -28, 290);
         walls.add(teleportBarrier3);
-        Wall teleportBarrier4 = new Wall(gp, 464, 288);
+        Wall teleportBarrier4 = new Wall(gp, 464, 290);
         walls.add(teleportBarrier4);
     }
 

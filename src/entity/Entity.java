@@ -214,7 +214,7 @@ public abstract class Entity
     public void changeDirectionGhost(CollisionHandler cHandler)
     {
         /* special case for when ghost needs to turn into ghost house */
-        if (this.ghostState == "eaten" && (this.x >= 209 && this.x <= 215) && (this.y >= 208 && this.y <= 216))
+        if (this.ghostState == "eaten" && (this.x >= 209 && this.x <= 215) && (this.y >= 208 && this.y <= 218))
         {
             this.movementCooldownTimer = 0;
         }
@@ -232,7 +232,7 @@ public abstract class Entity
             else if (this.ghostState == "eaten")
             {
                 /* goes into ghost house when in this position on map */
-                if (this.wallImmunity == false && (this.x >= 210 && this.x <= 215) && (this.y >= 208 && this.y <= 216))
+                if (this.wallImmunity == false && (this.x >= 209 && this.x <= 215) && (this.y >= 208 && this.y <= 218))
                 {
                     this.wallImmunity = true;
                     this.speed = 1;
@@ -256,8 +256,6 @@ public abstract class Entity
                             this.direction = "left";
                             if (this.x <= 180)
                             {
-//                                this.direction = "up";
-//                                changeGhostState("idle");
                                 changeGhostState("idleExit");
                             }
                         }
@@ -266,14 +264,12 @@ public abstract class Entity
                             this.direction = "right";
                             if (this.x >= 244)
                             {
-//                                this.direction = "up";
-//                                changeGhostState("idle");
                                 changeGhostState("idleExit");
                             }
                         }
                     }
                 }
-                else /* target is at entrance to ghost house */
+                else /* when ghost is not inside ghost house / at ghost house entrance */
                 {
                     this.targetChaseLogic(cHandler);
                 }
@@ -314,7 +310,7 @@ public abstract class Entity
         else
         {
             this.movementCooldownTimer++;
-            if (this.movementCooldownTimer >= 16)
+            if (this.movementCooldownTimer >= 16 || (this.ghostState == "eaten" && this.movementCooldownTimer >= 8))
             {
                 this.movementCooldownTimer = 0;
             }
@@ -336,8 +332,8 @@ public abstract class Entity
             right = checkGhostDirection("right", cHandler);
 
             /* special intersections where ghosts can't turn up */
-            if ((this.x >= 142 && this.x <= 280 && this.y >= 390 && this.y <= 406) ||
-                    (this.x >= 142 && this.x <= 280 && this.y >= 196 && this.y <= 216))
+            if ((this.x >= 142 && this.x <= 280 && this.y >= 390 && this.y <= 410) ||
+                    (this.x >= 142 && this.x <= 280 && this.y >= 196 && this.y <= 220))
             {
                 up = Integer.MAX_VALUE;
             }
@@ -369,8 +365,8 @@ public abstract class Entity
             down = checkGhostDirection("down", cHandler);
 
             /* special intersections where ghosts can't turn up */
-            if ((this.x >= 142 && this.x <= 280 && this.y >= 390 && this.y <= 406) ||
-                    (this.x >= 142 && this.x <= 280 && this.y >= 196 && this.y <= 216))
+            if ((this.x >= 142 && this.x <= 280 && this.y >= 390 && this.y <= 410) ||
+                    (this.x >= 142 && this.x <= 280 && this.y >= 196 && this.y <= 220))
             {
                 up = Integer.MAX_VALUE;
             }
@@ -427,8 +423,8 @@ public abstract class Entity
             right = checkGhostDirection("right", cHandler);
 
             /* special intersections where ghosts can't turn up */
-            if ((this.x >= 142 && this.x <= 280 && this.y >= 390 && this.y <= 406) ||
-                    (this.x >= 142 && this.x <= 280 && this.y >= 196 && this.y <= 216))
+            if ((this.x >= 142 && this.x <= 280 && this.y >= 390 && this.y <= 410) ||
+                    (this.x >= 142 && this.x <= 280 && this.y >= 196 && this.y <= 220))
             {
                 up = Integer.MAX_VALUE;
             }
@@ -619,7 +615,7 @@ public abstract class Entity
                 flipDirection();
                 break;
             case "eaten":
-                this.speed = 3;
+                this.speed = 4;
                 this.ghostState = "eaten";
                 this.wallImmunity = false;
                 this.frightenedTag = 1;
@@ -693,7 +689,7 @@ public abstract class Entity
     {
         if (side == "up")
         {
-            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x, this.hitbox.y - 18, hitboxSize + 2, hitboxSize + 2)) == true)
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x, this.hitbox.y - 18, hitboxSize, hitboxSize)) == true)
             {
                 return 9999;
             }
@@ -704,7 +700,7 @@ public abstract class Entity
         }
         else if (side == "left")
         {
-            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x - 18, this.hitbox.y, hitboxSize + 2, hitboxSize + 2)) == true)
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x - 18, this.hitbox.y, hitboxSize, hitboxSize)) == true)
             {
                 return 9999;
             }
@@ -715,7 +711,7 @@ public abstract class Entity
         }
         else if (side == "down")
         {
-            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x, this.hitbox.y + 18, hitboxSize + 2, hitboxSize + 2)) == true)
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x, this.hitbox.y + 18, hitboxSize, hitboxSize)) == true)
             {
                 return 9999;
             }
@@ -726,7 +722,7 @@ public abstract class Entity
         }
         else if (side == "right")
         {
-            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x + 18, this.hitbox.y, hitboxSize + 2, hitboxSize + 2)) == true)
+            if (cHandler.checkForIntersectionsBool(this, new Rectangle(this.hitbox.x + 18, this.hitbox.y, hitboxSize, hitboxSize)) == true)
             {
                 return 9999;
             }

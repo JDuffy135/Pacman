@@ -47,6 +47,10 @@ public class Blinky extends Entity
 
         this.direction = "left"; /* default: left */
         this.lastDirection = "left"; /* default: left */
+        ghostState = "chase";
+        movementCooldownTimer = 1;
+        wallImmunity = false;
+        frightenedTag = 0;
     }
 
     /* sets up the images for Blinky */
@@ -100,14 +104,17 @@ public class Blinky extends Entity
         this.collisionOnUp = false;
         this.collisionOnDown = false;
 
-        //PATHFINDING, WALL COLLISION CHECKING, AND MOVEMENT
-        this.calculateTarget();
-        this.changeDirectionGhost(gp.cHandler);
-        if (this.wallImmunity != true)
+        if (gp.gameState == gp.PLAY_STATE)
         {
-            gp.cHandler.checkWallCollision(this);
+            //PATHFINDING, WALL COLLISION CHECKING, AND MOVEMENT
+            this.calculateTarget();
+            this.changeDirectionGhost(gp.cHandler);
+            if (this.wallImmunity != true)
+            {
+                gp.cHandler.checkWallCollision(this);
+            }
+            this.moveGhost();
         }
-        this.moveGhost();
 
         //TELEPORT CHECKING
         this.teleport();
@@ -115,7 +122,11 @@ public class Blinky extends Entity
         //FRIGHTENED TIMER CHECKING
         if (frightenedTimer >= 1)
         {
-            frightenedTimer++;
+            if (gp.gameState == gp.PLAY_STATE)
+            {
+                frightenedTimer++; /* frightenedTimer only incremented during play state */
+            }
+
             /* turns frightened mode off after 9 seconds */
             if (frightenedTimer >= 540)
             {
@@ -157,8 +168,12 @@ public class Blinky extends Entity
     {
         image = null;
 
-        /* eaten sprite animation */
-        if (this.ghostState == "eaten")
+        /* eaten sprite animation during EATGHOST_STATE */
+        if (gp.gameState == gp.EATGHOST_STATE && this.frightenedTag == 1)
+        {
+            image = null;
+        }
+        else if (this.ghostState == "eaten") /* eaten sprite animation */
         {
             switch (direction)
             {
@@ -280,10 +295,10 @@ public class Blinky extends Entity
 //        g2.draw3DRect(this.killHitbox.x, this.killHitbox.y, this.killHitbox.width, this.killHitbox.height, true);
 
         /* directional hitbox visualizer - delete ventually */
-//        g2.draw3DRect(this.hitbox.x, this.hitbox.y - 18, hitboxSize + 2, hitboxSize + 2, true);
-//        g2.draw3DRect(this.hitbox.x, this.hitbox.y + 18, hitboxSize + 2, hitboxSize + 2, true);
-//        g2.draw3DRect(this.hitbox.x - 18, this.hitbox.y, hitboxSize + 2, hitboxSize + 2, true);
-//        g2.draw3DRect(this.hitbox.x + 18, this.hitbox.y, hitboxSize + 2, hitboxSize + 2, true);
+//        g2.draw3DRect(this.hitbox.x, this.hitbox.y - 18, hitboxSize, hitboxSize, true);
+//        g2.draw3DRect(this.hitbox.x, this.hitbox.y + 18, hitboxSize, hitboxSize, true);
+//        g2.draw3DRect(this.hitbox.x - 18, this.hitbox.y, hitboxSize, hitboxSize, true);
+//        g2.draw3DRect(this.hitbox.x + 18, this.hitbox.y, hitboxSize, hitboxSize, true);
 
         /* target visualizer - delete eventually */
 //        g2.draw3DRect(this.targetX, this.targetY, this.killHitbox.width, this.killHitbox.height, true);

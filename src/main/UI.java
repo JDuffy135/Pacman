@@ -15,6 +15,7 @@ public class UI
     GamePanel gp;
     Font primaryFont;
     BufferedImage bg;
+    BufferedImage currentbg;
 
     public UI(GamePanel gp)
     {
@@ -39,10 +40,12 @@ public class UI
     public void getBackgroundImage()
     {
         bg = null;
+        currentbg = null;
         /* NOTE TO SELF: use game states to determine which background is set up */
         try
         {
             bg = ImageIO.read(getClass().getResourceAsStream("/misc/GameScreen.png"));
+            currentbg = bg;
         } catch(IOException e)
         {
             e.printStackTrace();
@@ -52,7 +55,7 @@ public class UI
     public void draw(Graphics2D g2, ItemCollisionHandler icHandler)
     {
         /* background */
-        g2.drawImage(bg, 0, -8, 448, 576, null);
+        g2.drawImage(currentbg, 0, -8, 448, 576, null);
 
         /* text and score */
         g2.setFont(primaryFont.deriveFont(20F));

@@ -128,7 +128,10 @@ public class Pacman extends Entity
         gp.cHandler.checkWallCollision(this);
         gp.cHandler.checkGhostCollision(this); /* deals with ghost collisions and frightened timer / point bonus stuff */
         gp.icHandler.checkItemCollision(this);
-        this.move();
+        if (gp.gameState == gp.PLAY_STATE)
+        {
+            this.move();
+        }
 
         //TELEPORT CHECKING
         this.teleport();
@@ -156,7 +159,7 @@ public class Pacman extends Entity
         image = null;
 
         /* image is set to frightenedPointBonusImage if a fightened ghost is eaten */
-        if (frightenedPointBonusTimer > 0)
+        if (frightenedPointBonusTimer > 0 || gp.gameState == gp.EATGHOST_STATE)
         {
             image = frightenedPointBonusImage;
         }

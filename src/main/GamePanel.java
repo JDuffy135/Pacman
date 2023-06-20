@@ -38,17 +38,15 @@ public class GamePanel extends JPanel implements Runnable
     public Clyde clyde = new Clyde(this);
 
     //GAME STATE
-    public static int gameState = 1; /* 0 BY DEFAULT */
+    public static int gameState = 0; /* 0 BY DEFAULT */
     public final int START_STATE = 0; /* startup sequence */
     public final int PLAY_STATE = 1; /* gameplay state */
     public final int EATGHOST_STATE = 2; /* game pauses temporarily when a ghost is eaten */
     public final int LOSELIFE_STATE = 3; /* game pauses temporarily and sprite positions are reset */
-    public final int BOARDRESET_STATE = 4; /* board reset sequence */
+    public final int WIN_STATE = 4; /* board reset sequence */
     public final int GAMEOVER_STATE = 5; /* gameover screen */
-
-
-    //TEMPORARY VARIABLES FOR TESTING
-    boolean flag = false;
+    boolean flag = false; /* used for methods that only need to be executed once */
+    public int gameStateTimer = 0;
 
 
     public GamePanel()
@@ -108,28 +106,100 @@ public class GamePanel extends JPanel implements Runnable
         }
     }
 
+    /* use this whenever changing game state */
+    public void changeGameState(int newState)
+    {
+        gameStateTimer = 0;
+
+        switch (newState)
+        {
+            case START_STATE:
+                flag = false;
+                Entity.levelTimer = 0;
+                break;
+            case PLAY_STATE:
+                /* resets level timer and flag value for single execution methods */
+                if (gameState == START_STATE)
+                {
+                    flag = false;
+                    Entity.levelTimer = 0;
+                }
+                break;
+            case EATGHOST_STATE:
+                //...
+                break;
+            case LOSELIFE_STATE:
+                //...
+                break;
+            case WIN_STATE:
+                //...
+                break;
+            case GAMEOVER_STATE:
+                //...
+                break;
+        }
+
+        gameState = newState;
+    }
+
     //MAIN UPDATE METHOD: updates game values in game loop
     public void update()
     {
+        System.out.println(Entity.levelTimer);
+        gameStateTimer++;
         switch (gameState)
         {
             case START_STATE:
-                //...
+                updateStartState();
                 break;
             case PLAY_STATE:
                 updatePlayState();
                 break;
             case EATGHOST_STATE:
+                updateEatGhostState();
+                break;
+            case LOSELIFE_STATE:
                 //...
                 break;
-                //TO BE CONTINUED
+            case WIN_STATE:
+                updateWinState();
+                break;
+            case GAMEOVER_STATE:
+                //...
+                break;
         }
     }
 
     /* called by gameloop "update()" method when gameState == START_STATE */
     public void updateStartState()
     {
+        /* single execution commands for game setup */
+        if (gameStateTimer == 1)
+        {
+            //WALLS AND PELLETS
+            if (Entity.walls.size() < 1)
+            {
+                wallSpawner.createWalls();
+            }
+            itemSpawner.createPellets();
 
+            //RESET PACMAN POSITION
+            pacman.setDefaultValues();
+
+            //RESET GHOSTS
+            blinky.setDefaultValues();
+            pinky.setDefaultValues();
+            inky.setDefaultValues();
+            clyde.setDefaultValues();
+
+//            System.out.println("THIS IS FOR TESTING TO SEE HOW MANY TIMES THIS EXECUTES " + Entity.walls.size());
+        }
+
+        //CHANGES GAME STATE TO PLAY STATE
+        if (gameStateTimer >= 270)
+        {
+            changeGameState(PLAY_STATE);
+        }
     }
 
     /* called by gameloop "update()" method when gameState == PLAY_STATE */
@@ -152,18 +222,55 @@ public class GamePanel extends JPanel implements Runnable
         pacman.update();
 
         //UPDATES GHOSTS
-        if (Entity.levelTimer >= 180) /* timer delay currently here for debugging */
+        blinky.update();
+        pinky.update();
+        inky.update();
+        clyde.update();
+    }
+
+    public void updateEatGhostState()
+    {
+        //UPDATES PACMAN & HANDLES WALL AND GHOST COLLISIONS
+        pacman.update();
+
+        //UPDATES GHOSTS
+        blinky.update();
+        pinky.update();
+        inky.update();
+        clyde.update();
+
+        if (gameStateTimer >= 40)
         {
-            blinky.update();
-            pinky.update();
-            inky.update();
-            clyde.update();
+            changeGameState(PLAY_STATE);
+        }
+    }
+
+    public void updateLoseLifeState()
+    {
+
+    }
+
+    public void updateWinState()
+    {
+        System.out.println("LEVEL COMPLETE!");
+        System.out.println("NEW LEVEL: " + Entity.currentLevel + ", PELLETS EATEN: " + icHandler.pelletsEaten);
+
+        //FRIGHTENED MODE RESET
+        Entity.frightenedTimer = 0;
+        Entity.frightenedPointBonus = 200;
+
+        //...
+        /* need to make the gameboard blink */
+
+        if (gameStateTimer >= 360)
+        {
+            changeGameState(START_STATE);
         }
     }
 
     //MAIN DRAW METHOD: paints objects on screen
     @Override
-    public void paintComponent(Graphics g) /* updates screen and images */
+    public void paintComponent(Graphics g)
     {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g; /* converts g to a Graphics2D object so that we can use 2D graphics methods */
@@ -172,26 +279,34 @@ public class GamePanel extends JPanel implements Runnable
 //        long drawStart = 0;
 //        drawStart = System.nanoTime();
 
-
-        //MENU SCREEN
-        //...
-
+//        switch (gameState)
+//        {
+//            case START_STATE:
+//                //...
+//                break;
+//            case PLAY_STATE:
+//                //BACKGROUND, TEXT, GAME BOARD AND PELLETS/FRUITS
+//                ui.draw(g2, icHandler);
+//                itemSpawner.drawItems(g2);
+////                wallSpawner.paintWalls(g2); /* for debugging */
+//                //PLAYER
+//                pacman.draw(g2);
+//                //GHOSTS
+//                blinky.draw(g2);
+//                pinky.draw(g2);
+//                inky.draw(g2);
+//                clyde.draw(g2);
+//                break;
+//            case EATGHOST_STATE:
+//                //...
+//                break;
+//            //TO BE CONTINUED
+//        }
 
         //BACKGROUND, TEXT, GAME BOARD AND PELLETS/FRUITS
         ui.draw(g2, icHandler);
         itemSpawner.drawItems(g2);
-        //wallSpawner.paintWalls(g2); /* for debugging */
-
-
-        //SINGLE EXECUTION COMMANDS
-        if (flag == false)
-        {
-            /* using a flag just because I want this to run once - will eventually fix with game states */
-            wallSpawner.createWalls();
-            itemSpawner.createPellets();
-        }
-        flag = true;
-
+//        wallSpawner.paintWalls(g2); /* for debugging */
 
         //PLAYER
         pacman.draw(g2);
@@ -201,7 +316,6 @@ public class GamePanel extends JPanel implements Runnable
         pinky.draw(g2);
         inky.draw(g2);
         clyde.draw(g2);
-
 
         //DEBUG CONTINUED
 //        long drawEnd = System.nanoTime();

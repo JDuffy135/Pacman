@@ -2,6 +2,7 @@ package main;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import main.GamePanel;
 
 public class KeyHandler implements KeyListener
 {
@@ -26,33 +27,37 @@ public class KeyHandler implements KeyListener
         int code = e.getKeyCode();
         keyPressed = true;
 
-        if (code == KeyEvent.VK_W) /* up */
+        /* pacman movement during play state and eat ghost state */
+        if (gp.gameState == gp.PLAY_STATE || gp.gameState == gp.EATGHOST_STATE)
         {
-            downPressed = false;
-            leftPressed = false;
-            rightPressed = false;
-            upPressed = true;
-        }
-        if (code == KeyEvent.VK_S) /* down */
-        {
-            upPressed = false;
-            leftPressed = false;
-            rightPressed = false;
-            downPressed = true;
-        }
-        if (code == KeyEvent.VK_A) /* left */
-        {
-            downPressed = false;
-            upPressed = false;
-            rightPressed = false;
-            leftPressed = true;
-        }
-        if (code == KeyEvent.VK_D) /* right */
-        {
-            downPressed = false;
-            upPressed = false;
-            leftPressed = false;
-            rightPressed = true;
+            if (code == KeyEvent.VK_W) /* up */
+            {
+                downPressed = false;
+                leftPressed = false;
+                rightPressed = false;
+                upPressed = true;
+            }
+            if (code == KeyEvent.VK_S) /* down */
+            {
+                upPressed = false;
+                leftPressed = false;
+                rightPressed = false;
+                downPressed = true;
+            }
+            if (code == KeyEvent.VK_A) /* left */
+            {
+                downPressed = false;
+                upPressed = false;
+                rightPressed = false;
+                leftPressed = true;
+            }
+            if (code == KeyEvent.VK_D) /* right */
+            {
+                downPressed = false;
+                upPressed = false;
+                leftPressed = false;
+                rightPressed = true;
+            }
         }
     }
 

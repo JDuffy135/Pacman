@@ -18,9 +18,9 @@ public class CollisionHandler extends Entity
     {
         /* finds location of each side of entity's "hitbox" */
         int entityLeftX = entity.x + entity.hitboxOffset;
-        int entityRightX = entityLeftX + entity.hitbox.width;
+//        int entityRightX = entityLeftX + entity.hitbox.width;
         int entityTopY = entity.y + entity.hitboxOffset;
-        int entityBottomY = entityTopY + entity.hitbox.height;
+//        int entityBottomY = entityTopY + entity.hitbox.height;
 
         /* creates a temporary hitbox offset in the direction of key pressed to check if entity can move there */
         directionalHitbox(entity, entityLeftX, entityTopY);
@@ -140,7 +140,8 @@ public class CollisionHandler extends Entity
                         frightenedPointBonus = 200;
                     }
 
-                    //NOTE: write code to change game state to "paused" for ~40 frames...?
+                    /* changes gameState to EATGHOST_STATE */
+                    gp.changeGameState(gp.EATGHOST_STATE);
                 }
                 else if (g.ghostState == "chase" || g.ghostState == "scatter")
                 {

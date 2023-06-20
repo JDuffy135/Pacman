@@ -22,7 +22,7 @@ public class Inky extends Entity
         lastDirection = "";
 
         ghostState = "idle"; /* default: idle */
-        idleTime = 480 + 360; /* idles for 6 seconds after pinky (14 seconds) */
+        idleTime = 480 + 480; /* idles for 8 seconds after pinky (16 seconds) */
         frightenedTag = 0;
 
         setDefaultValues();
@@ -47,6 +47,10 @@ public class Inky extends Entity
 
         this.direction = "down"; /* default: down */
         this.lastDirection = "down"; /* default: down */
+        ghostState = "idle";
+        movementCooldownTimer = 1;
+        wallImmunity = true;
+        frightenedTag = 0;
     }
 
     /* sets up the images for Inky */
@@ -126,14 +130,17 @@ public class Inky extends Entity
         this.collisionOnUp = false;
         this.collisionOnDown = false;
 
-        //PATHFINDING, WALL COLLISION CHECKING, AND MOVEMENT
-        this.calculateTarget();
-        this.changeDirectionGhost(gp.cHandler);
-        if (this.wallImmunity != true)
+        if (gp.gameState == gp.PLAY_STATE)
         {
-            gp.cHandler.checkWallCollision(this);
+            //PATHFINDING, WALL COLLISION CHECKING, AND MOVEMENT
+            this.calculateTarget();
+            this.changeDirectionGhost(gp.cHandler);
+            if (this.wallImmunity != true)
+            {
+                gp.cHandler.checkWallCollision(this);
+            }
+            this.moveGhost();
         }
-        this.moveGhost();
 
         //TELEPORT CHECKING
         this.teleport();
@@ -166,8 +173,12 @@ public class Inky extends Entity
     {
         image = null;
 
-        /* eaten sprite animation */
-        if (this.ghostState == "eaten")
+        /* eaten sprite animation during EATGHOST_STATE */
+        if (gp.gameState == gp.EATGHOST_STATE && this.frightenedTag == 1)
+        {
+            image = null;
+        }
+        else if (this.ghostState == "eaten") /* eaten sprite animation */
         {
             switch (direction)
             {
@@ -289,10 +300,10 @@ public class Inky extends Entity
 //        g2.draw3DRect(this.killHitbox.x, this.killHitbox.y, this.killHitbox.width, this.killHitbox.height, true);
 
         /* directional hitbox visualizer - delete ventually */
-//        g2.draw3DRect(this.hitbox.x, this.hitbox.y - 18, hitboxSize + 2, hitboxSize + 2, true);
-//        g2.draw3DRect(this.hitbox.x, this.hitbox.y + 18, hitboxSize + 2, hitboxSize + 2, true);
-//        g2.draw3DRect(this.hitbox.x - 18, this.hitbox.y, hitboxSize + 2, hitboxSize + 2, true);
-//        g2.draw3DRect(this.hitbox.x + 18, this.hitbox.y, hitboxSize + 2, hitboxSize + 2, true);
+//        g2.draw3DRect(this.hitbox.x, this.hitbox.y - 18, hitboxSize, hitboxSize, true);
+//        g2.draw3DRect(this.hitbox.x, this.hitbox.y + 18, hitboxSize, hitboxSize, true);
+//        g2.draw3DRect(this.hitbox.x - 18, this.hitbox.y, hitboxSize, hitboxSize, true);
+//        g2.draw3DRect(this.hitbox.x + 18, this.hitbox.y, hitboxSize, hitboxSize, true);
 
         /* target visualizer - delete eventually */
 //        g2.draw3DRect(this.targetX, this.targetY, this.killHitbox.width, this.killHitbox.height, true);
