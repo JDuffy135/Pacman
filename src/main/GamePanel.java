@@ -45,7 +45,6 @@ public class GamePanel extends JPanel implements Runnable
     public final int LOSELIFE_STATE = 3; /* game pauses temporarily and sprite positions are reset */
     public final int WIN_STATE = 4; /* board reset sequence */
     public final int GAMEOVER_STATE = 5; /* gameover screen */
-    boolean flag = false; /* used for methods that only need to be executed once */
     public int gameStateTimer = 0;
 
 
@@ -99,7 +98,7 @@ public class GamePanel extends JPanel implements Runnable
             /* display FPS */
             if (timer >= 1000000000)
             {
-                //System.out.println("FPS: " + drawCount);
+                System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
             }
@@ -111,32 +110,25 @@ public class GamePanel extends JPanel implements Runnable
     {
         gameStateTimer = 0;
 
-        switch (newState)
+        /* resets lives and currentLevel if game restarts */
+        if (newState == START_STATE && gameState == GAMEOVER_STATE)
         {
-            case START_STATE:
-                flag = false;
-                Entity.levelTimer = 0;
-                break;
-            case PLAY_STATE:
-                /* resets level timer and flag value for single execution methods */
-                if (gameState == START_STATE)
-                {
-                    flag = false;
-                    Entity.levelTimer = 0;
-                }
-                break;
-            case EATGHOST_STATE:
-                //...
-                break;
-            case LOSELIFE_STATE:
-                //...
-                break;
-            case WIN_STATE:
-                //...
-                break;
-            case GAMEOVER_STATE:
-                //...
-                break;
+            Entity.currentLevel = 1;
+            Entity.lives = 3;
+            icHandler.pelletsEaten = 0;
+            icHandler.score = 0;
+            //NOTE: also set highscore equal to score if score > highscore
+        }
+        else if (newState == LOSELIFE_STATE)
+        {
+            /* lives are decremented by 1 if pacman is hit by ghost */
+            Entity.lives -= 1;
+
+            /* fruit disappears if present */
+            if (itemSpawner.fruitPresent == true)
+            {
+                itemSpawner.deleteFruit();
+            }
         }
 
         gameState = newState;
@@ -145,7 +137,7 @@ public class GamePanel extends JPanel implements Runnable
     //MAIN UPDATE METHOD: updates game values in game loop
     public void update()
     {
-        System.out.println(Entity.levelTimer);
+//        System.out.println(Entity.levelTimer);
         gameStateTimer++;
         switch (gameState)
         {
@@ -159,13 +151,13 @@ public class GamePanel extends JPanel implements Runnable
                 updateEatGhostState();
                 break;
             case LOSELIFE_STATE:
-                //...
+                updateLoseLifeState();
                 break;
             case WIN_STATE:
                 updateWinState();
                 break;
             case GAMEOVER_STATE:
-                //...
+                updateGameOverState();
                 break;
         }
     }
@@ -181,7 +173,10 @@ public class GamePanel extends JPanel implements Runnable
             {
                 wallSpawner.createWalls();
             }
-            itemSpawner.createPellets();
+            if (icHandler.pelletsEaten == 0)
+            {
+                itemSpawner.createPellets();
+            }
 
             //RESET PACMAN POSITION
             pacman.setDefaultValues();
@@ -247,25 +242,38 @@ public class GamePanel extends JPanel implements Runnable
 
     public void updateLoseLifeState()
     {
+        pacman.image = null;
 
+        if (gameStateTimer >= 120)
+        {
+            changeGameState(START_STATE);
+        }
     }
 
     public void updateWinState()
     {
-        System.out.println("LEVEL COMPLETE!");
-        System.out.println("NEW LEVEL: " + Entity.currentLevel + ", PELLETS EATEN: " + icHandler.pelletsEaten);
-
         //FRIGHTENED MODE RESET
         Entity.frightenedTimer = 0;
         Entity.frightenedPointBonus = 200;
 
-        //...
-        /* need to make the gameboard blink */
+        //GAMEBOARD BLINK
+        if (gameStateTimer == 120 || gameStateTimer == 140 || gameStateTimer == 180
+                || gameStateTimer == 200 || gameStateTimer == 240 || gameStateTimer == 260)
+        {
+            ui.backgroundBlink();
+        }
 
         if (gameStateTimer >= 360)
         {
             changeGameState(START_STATE);
         }
+    }
+
+    public void updateGameOverState()
+    {
+        //FRIGHTENED MODE RESET
+        Entity.frightenedTimer = 0;
+        Entity.frightenedPointBonus = 200;
     }
 
     //MAIN DRAW METHOD: paints objects on screen
@@ -279,43 +287,25 @@ public class GamePanel extends JPanel implements Runnable
 //        long drawStart = 0;
 //        drawStart = System.nanoTime();
 
-//        switch (gameState)
-//        {
-//            case START_STATE:
-//                //...
-//                break;
-//            case PLAY_STATE:
-//                //BACKGROUND, TEXT, GAME BOARD AND PELLETS/FRUITS
-//                ui.draw(g2, icHandler);
-//                itemSpawner.drawItems(g2);
-////                wallSpawner.paintWalls(g2); /* for debugging */
-//                //PLAYER
-//                pacman.draw(g2);
-//                //GHOSTS
-//                blinky.draw(g2);
-//                pinky.draw(g2);
-//                inky.draw(g2);
-//                clyde.draw(g2);
-//                break;
-//            case EATGHOST_STATE:
-//                //...
-//                break;
-//            //TO BE CONTINUED
-//        }
 
         //BACKGROUND, TEXT, GAME BOARD AND PELLETS/FRUITS
         ui.draw(g2, icHandler);
-        itemSpawner.drawItems(g2);
+        if (gameState != GAMEOVER_STATE)
+        {
+            //ITEMS
+            itemSpawner.drawItems(g2);
+
+            //PLAYER
+            pacman.draw(g2);
+
+            //GHOSTS
+            blinky.draw(g2);
+            pinky.draw(g2);
+            inky.draw(g2);
+            clyde.draw(g2);
+        }
 //        wallSpawner.paintWalls(g2); /* for debugging */
 
-        //PLAYER
-        pacman.draw(g2);
-
-        //GHOSTS
-        blinky.draw(g2);
-        pinky.draw(g2);
-        inky.draw(g2);
-        clyde.draw(g2);
 
         //DEBUG CONTINUED
 //        long drawEnd = System.nanoTime();

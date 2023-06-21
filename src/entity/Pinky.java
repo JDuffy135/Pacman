@@ -45,6 +45,16 @@ public class Pinky extends Entity
         this.y = 260; /* default: 260 */
         this.speed = 1;
 
+        /* for loselife and level reset */
+        if (this.hitbox != null)
+        {
+            this.hitbox.setLocation(x, y);
+        }
+        if (this.killHitbox != null)
+        {
+            this.killHitbox.setLocation(x + 8, y + 8);
+        }
+
         this.direction = "up"; /* default: up */
         this.lastDirection = "up"; /* default: up */
         ghostState = "idle";

@@ -25,11 +25,20 @@ public class KeyHandler implements KeyListener
     public void keyPressed(KeyEvent e)
     {
         int code = e.getKeyCode();
-        keyPressed = true;
+
+        if (gp.gameState == gp.GAMEOVER_STATE)
+        {
+            keyPressed = true;
+            if (code == KeyEvent.VK_SPACE)
+            {
+                gp.changeGameState(gp.START_STATE);
+            }
+        }
 
         /* pacman movement during play state and eat ghost state */
         if (gp.gameState == gp.PLAY_STATE || gp.gameState == gp.EATGHOST_STATE)
         {
+            keyPressed = true;
             if (code == KeyEvent.VK_W) /* up */
             {
                 downPressed = false;

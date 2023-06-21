@@ -85,6 +85,7 @@ public class ItemCollisionHandler extends Item
             {
                 ItemSpawner.deleteFruit();
             }
+            Entity.levelTimer = 0;
             gp.changeGameState(gp.WIN_STATE);
         }
     }

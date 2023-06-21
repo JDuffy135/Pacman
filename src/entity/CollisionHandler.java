@@ -145,10 +145,14 @@ public class CollisionHandler extends Entity
                 }
                 else if (g.ghostState == "chase" || g.ghostState == "scatter")
                 {
-                    //WRITE CODE FOR THIS STUFF
-                    //decrement pacman lives
-                    //pause for 120 frames
-                    //reset ghosts and pacman (by resetting levelTimer to 0)
+                    if (Entity.lives == 1)
+                    {
+                        gp.changeGameState(gp.GAMEOVER_STATE);
+                    }
+                    else
+                    {
+                        gp.changeGameState(gp.LOSELIFE_STATE);
+                    }
                 }
             }
         }

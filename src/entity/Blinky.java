@@ -45,6 +45,16 @@ public class Blinky extends Entity
         this.y = 212; /* default: 212 */
         this.speed = 2;
 
+        /* for loselife and level reset */
+        if (this.hitbox != null)
+        {
+            this.hitbox.setLocation(x, y);
+        }
+        if (this.killHitbox != null)
+        {
+            this.killHitbox.setLocation(x + 8, y + 8);
+        }
+
         this.direction = "left"; /* default: left */
         this.lastDirection = "left"; /* default: left */
         ghostState = "chase";

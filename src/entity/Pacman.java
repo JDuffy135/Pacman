@@ -43,6 +43,12 @@ public class Pacman extends Entity
         this.y = 404;
         this.speed = 2;
 
+        /* this is here so hitbox doesn't immediately collide with ghost again after losing a life */
+        if (this.hitbox != null)
+        {
+            this.hitbox.setLocation(-64, -64);
+        }
+
         this.direction = "stationary";
         this.lastDirection = "right";
     }
@@ -214,6 +220,6 @@ public class Pacman extends Entity
         g2.drawImage(image, x, y, null);
 
         /* hitbox visualizer - delete eventually */
-        //g2.draw3DRect(this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height, true);
+//        g2.draw3DRect(this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height, true);
     }
 }
