@@ -80,7 +80,7 @@ public class ItemSpawner extends Item
     public void drawItems(Graphics2D g2)
     {
         /* draws fruit if one exists on the screen */
-        if (currentFruitImage != null)
+        if (currentFruitImage != null && gp.gameState != gp.GAMEOVER_STATE)
         {
             g2.drawImage(currentFruitImage, 214, 310, null);
         }

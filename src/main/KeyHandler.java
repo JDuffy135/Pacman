@@ -36,7 +36,7 @@ public class KeyHandler implements KeyListener
         }
 
         /* pacman movement during play state and eat ghost state */
-        if (gp.gameState == gp.PLAY_STATE || gp.gameState == gp.EATGHOST_STATE)
+        if (gp.gameState == gp.PLAY_STATE || gp.gameState == gp.EATGHOST_STATE || gp.gameState == gp.START_STATE)
         {
             keyPressed = true;
             if (code == KeyEvent.VK_W) /* up */

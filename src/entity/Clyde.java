@@ -22,7 +22,7 @@ public class Clyde extends Entity
         lastDirection = "";
 
         ghostState = "idle"; /* default: idle */
-        idleTime = 480 + 480 + 480; /* idles for 8 seconds after inky (24 seconds) */
+        idleTime = 1080; /* idles for 18 seconds after first scatter sequence ends */
         frightenedTag = 0;
 
         setDefaultValues();
@@ -165,7 +165,8 @@ public class Clyde extends Entity
         image = null;
 
         /* eaten sprite animation during EATGHOST_STATE */
-        if (gp.gameState == gp.EATGHOST_STATE && this.frightenedTag == 1)
+        if (gp.gameState == gp.EATGHOST_STATE && this.frightenedTag == 1
+                && (this.ghostState == "eaten" || this.ghostState == "frightened"))
         {
             image = null;
         }

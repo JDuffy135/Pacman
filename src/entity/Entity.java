@@ -249,7 +249,7 @@ public abstract class Entity
                         }
                         else if (this.equals(ghosts[1])) /* Pinky */
                         {
-                            changeGhostState("idle");
+                            changeGhostState("idleExit");
                         }
                         else if (this.equals(ghosts[2])) /* Inky */
                         {
@@ -299,6 +299,10 @@ public abstract class Entity
                     if (frightenedTimer >= 1 && this.frightenedTag == 0)
                     {
                         changeGhostState("frightened");
+                    }
+                    else if (gp.scatterMode == true)
+                    {
+                        changeGhostState("scatter");
                     }
                     else
                     {
@@ -612,6 +616,7 @@ public abstract class Entity
                 this.speed = 1;
                 this.ghostState = "frightened";
                 this.wallImmunity = false;
+                this.frightenedTag = 0;
                 flipDirection();
                 break;
             case "eaten":

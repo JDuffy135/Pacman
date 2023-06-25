@@ -22,7 +22,7 @@ public class Inky extends Entity
         lastDirection = "";
 
         ghostState = "idle"; /* default: idle */
-        idleTime = 480 + 480; /* idles for 8 seconds after pinky (16 seconds) */
+        idleTime = 480; /* idles for 8 seconds after first scatter sequence ends */
         frightenedTag = 0;
 
         setDefaultValues();
@@ -184,7 +184,8 @@ public class Inky extends Entity
         image = null;
 
         /* eaten sprite animation during EATGHOST_STATE */
-        if (gp.gameState == gp.EATGHOST_STATE && this.frightenedTag == 1)
+        if (gp.gameState == gp.EATGHOST_STATE && this.frightenedTag == 1
+                && (this.ghostState == "eaten" || this.ghostState == "frightened"))
         {
             image = null;
         }

@@ -43,10 +43,9 @@ public class Pacman extends Entity
         this.y = 404;
         this.speed = 2;
 
-        /* this is here so hitbox doesn't immediately collide with ghost again after losing a life */
         if (this.hitbox != null)
         {
-            this.hitbox.setLocation(-64, -64);
+            this.hitbox.setLocation(this.x, this.y);
         }
 
         this.direction = "stationary";

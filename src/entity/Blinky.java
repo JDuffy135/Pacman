@@ -21,7 +21,7 @@ public class Blinky extends Entity
         direction = "";
         lastDirection = "";
 
-        ghostState = "chase"; /* default: chase (idle for other ghosts) */
+        ghostState = "scatter"; /* default: scatter (idle for other ghosts) */
         idleTime = 0;
         frightenedTag = 0;
 
@@ -57,7 +57,7 @@ public class Blinky extends Entity
 
         this.direction = "left"; /* default: left */
         this.lastDirection = "left"; /* default: left */
-        ghostState = "chase";
+        ghostState = "scatter";
         movementCooldownTimer = 1;
         wallImmunity = false;
         frightenedTag = 0;
@@ -144,13 +144,20 @@ public class Blinky extends Entity
                 frightenedPointBonus = 200;
                 frightenedPointBonusImage = pts200;
 
-                /* sets all frightened ghosts back to chase state and resets all ghosts' frightenedTag */
+                /* sets all frightened ghosts back to chase/scatter state and resets all ghosts' frightenedTag */
                 for (Entity g : ghosts)
                 {
                     g.frightenedTag = 0;
                     if (g != null && g.ghostState == "frightened")
                     {
-                        g.changeGhostState("chase");
+                        if (gp.scatterMode == false)
+                        {
+                            g.changeGhostState("chase");
+                        }
+                        else /* if gp.scatterMode == true */
+                        {
+                            g.changeGhostState("scatter");
+                        }
                     }
                 }
             }
@@ -179,7 +186,8 @@ public class Blinky extends Entity
         image = null;
 
         /* eaten sprite animation during EATGHOST_STATE */
-        if (gp.gameState == gp.EATGHOST_STATE && this.frightenedTag == 1)
+        if (gp.gameState == gp.EATGHOST_STATE && this.frightenedTag == 1
+                && (this.ghostState == "eaten" || this.ghostState == "frightened"))
         {
             image = null;
         }

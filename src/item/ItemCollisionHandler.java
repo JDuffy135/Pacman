@@ -8,7 +8,9 @@ public class ItemCollisionHandler extends Item
 {
     GamePanel gp;
     public static int score;
+    public static int highscore = 0;
     public static int pelletsEaten;
+    int wakaTimer = 0;
 
     public ItemCollisionHandler(GamePanel gp)
     {
@@ -22,20 +24,44 @@ public class ItemCollisionHandler extends Item
     /* also changes ghosts to "frightened" state when a big pellet is eaten */
     public void checkItemCollision(Entity entity)
     {
+        /* wakaTimer adjustment */
+        if (wakaTimer >= 15)
+        {
+            wakaTimer = 0;
+        }
+        if (wakaTimer >= 1)
+        {
+            wakaTimer++;
+        }
+
         /* Fruit */
         if ((currentFruitImage != null) && (entity.hitbox.intersects(ItemSpawner.fruit.hitbox)))
         {
+            /* eatfruit sound effect */
+            gp.sfx.setFile(2);
+            gp.sfx.play();
+
+            /* score adjustment and delete fruit */
             score += ItemSpawner.fruit.points;
             ItemSpawner.deleteFruit();
         }
 
         /* Big Pellets */
-        if (entity.x <= 40 || entity.x >=400)
+        if (entity.x <= 40 || entity.x >= 400)
         {
             for (BigPellet p : bigPellets)
             {
                 if (p != null && entity.hitbox.intersects(p.hitbox))
                 {
+                    /* waka sound effect */
+                    if (wakaTimer == 0)
+                    {
+                        gp.sfx.setFile(10);
+                        gp.sfx.play();
+                        wakaTimer++;
+                    }
+
+                    /* point adjustment and nullify pellet from gameboard */
                     bigPellets[p.arrayIndex] = null;
                     p.hitbox.setLocation(-5000, -5000);
                     p.x = -5000;
@@ -59,11 +85,20 @@ public class ItemCollisionHandler extends Item
             }
         }
 
-        /* Big Pellets */
+        /* Small Pellets */
         for (SmallPellet p : smallPellets)
         {
             if (p != null && entity.hitbox.intersects(p.hitbox))
             {
+                /* waka sound effect */
+                if (wakaTimer == 0)
+                {
+                    gp.sfx.setFile(10);
+                    gp.sfx.play();
+                    wakaTimer++;
+                }
+
+                /* point adjustment and nullify pellet from gameboard */
                 smallPellets[p.arrayIndex] = null;
                 p.hitbox.setLocation(-5000, -5000);
                 p.x = -5000;

@@ -139,20 +139,12 @@ public class CollisionHandler extends Entity
                         frightenedPointBonusImage = pts1600;
                         frightenedPointBonus = 200;
                     }
-
                     /* changes gameState to EATGHOST_STATE */
                     gp.changeGameState(gp.EATGHOST_STATE);
                 }
                 else if (g.ghostState == "chase" || g.ghostState == "scatter")
                 {
-                    if (Entity.lives == 1)
-                    {
-                        gp.changeGameState(gp.GAMEOVER_STATE);
-                    }
-                    else
-                    {
-                        gp.changeGameState(gp.LOSELIFE_STATE);
-                    }
+                    gp.changeGameState(gp.LOSELIFE_STATE);
                 }
             }
         }

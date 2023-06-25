@@ -22,7 +22,7 @@ public class Pinky extends Entity
         lastDirection = "";
 
         ghostState = "idle"; /* default: idle */
-        idleTime = 480; /* idles for 8 seconds */
+        idleTime = 120; /* idles for 2 seconds */
         frightenedTag = 0;
 
         setDefaultValues();
@@ -174,7 +174,8 @@ public class Pinky extends Entity
         image = null;
 
         /* eaten sprite animation during EATGHOST_STATE */
-        if (gp.gameState == gp.EATGHOST_STATE && this.frightenedTag == 1)
+        if (gp.gameState == gp.EATGHOST_STATE && this.frightenedTag == 1
+                && (this.ghostState == "eaten" || this.ghostState == "frightened"))
         {
             image = null;
         }

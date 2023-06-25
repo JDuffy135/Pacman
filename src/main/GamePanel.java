@@ -24,6 +24,8 @@ public class GamePanel extends JPanel implements Runnable
     public UI ui = new UI(this);
     public CollisionHandler cHandler = new CollisionHandler(this);
     public ItemCollisionHandler icHandler = new ItemCollisionHandler(this);
+    public Sound backgroundSounds = new Sound();
+    public Sound sfx = new Sound();
     WallSpawner wallSpawner = new WallSpawner(this);
     ItemSpawner itemSpawner = new ItemSpawner(this);
 
@@ -46,6 +48,9 @@ public class GamePanel extends JPanel implements Runnable
     public final int WIN_STATE = 4; /* board reset sequence */
     public final int GAMEOVER_STATE = 5; /* gameover screen */
     public int gameStateTimer = 0;
+    public boolean frightenedMode = false;
+    public boolean scatterMode = true;
+    public int modeSwitches = 0;
 
 
     public GamePanel()
@@ -82,7 +87,7 @@ public class GamePanel extends JPanel implements Runnable
             timer += (currentTime - lastTime);
             lastTime = currentTime;
 
-            if (delta >= 1)
+            if (delta >= 1 && drawCount <= 60)
             {
                 /* update sprite values */
                 update();
@@ -93,6 +98,20 @@ public class GamePanel extends JPanel implements Runnable
                 /* resets game loop at end of each execution */
                 delta--;
                 drawCount++;
+                gameStateTimer++;
+            }
+            else if (delta >= 10) /* if drawCount goes over 60, framerate will drop */
+            {
+
+                /* update sprite values */
+                update();
+
+                /* calls paintComponent to update the screen based on updated sprite values */
+                repaint();
+
+                /* resets game loop at end of each execution */
+                delta -= 10;
+                drawCount++;
             }
 
             /* display FPS */
@@ -101,6 +120,7 @@ public class GamePanel extends JPanel implements Runnable
                 System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
+                delta = 0;
             }
         }
     }
@@ -109,20 +129,53 @@ public class GamePanel extends JPanel implements Runnable
     public void changeGameState(int newState)
     {
         gameStateTimer = 0;
+        backgroundSounds.stop();
+        sfx.stop();
 
         /* resets lives and currentLevel if game restarts */
         if (newState == START_STATE && gameState == GAMEOVER_STATE)
         {
+            //RESET VALUES
             Entity.currentLevel = 1;
+            Entity.levelTimer = 0;
             Entity.lives = 3;
+            scatterMode = true;
+            modeSwitches = 0;
             icHandler.pelletsEaten = 0;
             icHandler.score = 0;
-            //NOTE: also set highscore equal to score if score > highscore
+        }
+        else if (newState == GAMEOVER_STATE)
+        {
+            /* delete fruit if present */
+            if (itemSpawner.fruitPresent == true)
+            {
+                itemSpawner.deleteFruit();
+            }
+        }
+        else if (newState == PLAY_STATE)
+        {
+            //GHOST SIREN BACKGROUND SOUND
+            backgroundSounds.setFile(5);
+            backgroundSounds.play();
+            backgroundSounds.loop();
+        }
+        else if (newState == EATGHOST_STATE)
+        {
+            //EAT GHOST SOUND EFFECT
+            backgroundSounds.setFile(3);
+            backgroundSounds.play();
         }
         else if (newState == LOSELIFE_STATE)
         {
-            /* lives are decremented by 1 if pacman is hit by ghost */
+            /* lives are decremented by 1, level timer reset, and scatter mode initiated */
             Entity.lives -= 1;
+            Entity.levelTimer = 0;
+            scatterMode = true;
+            modeSwitches = 0;
+
+            /* death sound */
+            backgroundSounds.setFile(8);
+            backgroundSounds.play();
 
             /* fruit disappears if present */
             if (itemSpawner.fruitPresent == true)
@@ -134,11 +187,10 @@ public class GamePanel extends JPanel implements Runnable
         gameState = newState;
     }
 
-    //MAIN UPDATE METHOD: updates game values in game loop
+    //MAIN UPDATE METHOD: updates game values in game loop (gameStateTimer updated in game loop method though)
     public void update()
     {
-//        System.out.println(Entity.levelTimer);
-        gameStateTimer++;
+//        System.out.println(gameStateTimer);
         switch (gameState)
         {
             case START_STATE:
@@ -187,11 +239,22 @@ public class GamePanel extends JPanel implements Runnable
             inky.setDefaultValues();
             clyde.setDefaultValues();
 
-//            System.out.println("THIS IS FOR TESTING TO SEE HOW MANY TIMES THIS EXECUTES " + Entity.walls.size());
+            //STARTUP SOUND & DEFAULT SFX VALUE
+            backgroundSounds.setFile(9);
+            backgroundSounds.play();
+            sfx.setFile(10);
         }
 
-        //CHANGES GAME STATE TO PLAY STATE
-        if (gameStateTimer >= 270)
+//        //CHANGES GAME STATE TO PLAY STATE
+//        if (Entity.currentLevel == 1 && Entity.lives == 3)
+//        {
+//            /* this condition here because work around FPS spike in beginning */
+//            if (gameStateTimer >= 480)
+//            {
+//                changeGameState(PLAY_STATE);
+//            }
+//        }
+        if (gameStateTimer >= 340)
         {
             changeGameState(PLAY_STATE);
         }
@@ -213,15 +276,114 @@ public class GamePanel extends JPanel implements Runnable
             itemSpawner.updateFruitTimer();
         }
 
+        //SETS NEW HIGHSCORE VALUE
+        if (icHandler.score > icHandler.highscore)
+        {
+            icHandler.highscore = icHandler.score;
+        }
+
+        //SCATTER & CHASE SEQUENCES FOR GHOSTS
+        if (Entity.currentLevel >= 8)
+        {
+            if (Entity.levelTimer >= 5*60 && modeSwitches == 0)
+            {
+                changeMode("chase");
+            }
+        }
+        else if (Entity.currentLevel >= 5)
+        {
+            if (Entity.levelTimer >= 5*60 && (modeSwitches == 0 || modeSwitches == 2 || modeSwitches == 4))
+            {
+                changeMode("chase");
+            }
+            else if (Entity.levelTimer >= 20*60 && (modeSwitches == 1 || modeSwitches == 3))
+            {
+                changeMode("scatter");
+            }
+            else if (Entity.levelTimer >= 17*60 && (modeSwitches == 5))
+            {
+                changeMode("scatter");
+            }
+            else if (Entity.levelTimer >= 16 && (modeSwitches == 6))
+            {
+                changeMode("chase");
+            }
+        }
+        else if (Entity.currentLevel >= 2)
+        {
+            if (Entity.levelTimer >= 7*60 && (modeSwitches == 0 || modeSwitches == 2))
+            {
+                changeMode("chase");
+            }
+            else if (Entity.levelTimer >= 20*60 && (modeSwitches == 1 || modeSwitches == 3))
+            {
+                changeMode("scatter");
+            }
+            else if (Entity.levelTimer >= 13*60 && (modeSwitches == 5))
+            {
+                changeMode("scatter");
+            }
+            else if (Entity.levelTimer >= 16 && (modeSwitches == 6))
+            {
+                changeMode("chase");
+            }
+        }
+        else /* level 1 */
+        {
+            if (Entity.levelTimer >= 7*60 && (modeSwitches == 0 || modeSwitches == 2))
+            {
+                changeMode("chase");
+            }
+            else if (Entity.levelTimer >= 20*60 && (modeSwitches == 1 || modeSwitches == 3 || modeSwitches == 5))
+            {
+                changeMode("scatter");
+            }
+            else if (Entity.levelTimer >= 5*60 && (modeSwitches == 4 || modeSwitches == 6))
+            {
+                changeMode("chase");
+            }
+        }
+
         //UPDATES PACMAN & HANDLES WALL AND GHOST COLLISIONS
-        pacman.update();
+        if (gameStateTimer >= 15) { pacman.update(); }
 
         //UPDATES GHOSTS
-        blinky.update();
-        pinky.update();
-        inky.update();
-        clyde.update();
+        if (gameStateTimer >= 15) { blinky.update(); }
+        if (gameStateTimer >= 15) { pinky.update(); }
+        if (gameStateTimer >= 15) { inky.update(); }
+        if (gameStateTimer >= 15) { clyde.update(); }
     }
+
+    /* helper method for updatePlayState - alternates between scatter and chase mode for ghosts */
+     public void changeMode(String mode)
+     {
+         modeSwitches++;
+         Entity.levelTimer = 0;
+         if (mode == "chase")
+         {
+             scatterMode = false;
+             /* set ghosts in scatter mode back to chase mode */
+             for (Entity g : Entity.ghosts)
+             {
+                 if (g.ghostState == "scatter")
+                 {
+                     g.changeGhostState("chase");
+                 }
+             }
+         }
+         else if (mode == "scatter")
+         {
+             scatterMode = true;
+             /* set ghosts in chase mode back to scatter mode */
+             for (Entity g : Entity.ghosts)
+             {
+                 if (g.ghostState == "chase")
+                 {
+                     g.changeGhostState("scatter");
+                 }
+             }
+         }
+     }
 
     public void updateEatGhostState()
     {
@@ -234,7 +396,7 @@ public class GamePanel extends JPanel implements Runnable
         inky.update();
         clyde.update();
 
-        if (gameStateTimer >= 40)
+        if (gameStateTimer >= 60)
         {
             changeGameState(PLAY_STATE);
         }
@@ -242,11 +404,20 @@ public class GamePanel extends JPanel implements Runnable
 
     public void updateLoseLifeState()
     {
-        pacman.image = null;
+        //FRIGHTENED MODE RESET
+        Entity.frightenedTimer = 0;
+        Entity.frightenedPointBonus = 200;
 
-        if (gameStateTimer >= 120)
+        if (gameStateTimer >= 200)
         {
-            changeGameState(START_STATE);
+            if (Entity.lives == 0)
+            {
+                changeGameState(GAMEOVER_STATE);
+            }
+            else
+            {
+                changeGameState(START_STATE);
+            }
         }
     }
 
@@ -255,6 +426,10 @@ public class GamePanel extends JPanel implements Runnable
         //FRIGHTENED MODE RESET
         Entity.frightenedTimer = 0;
         Entity.frightenedPointBonus = 200;
+
+        //SCATTER MODE RESET
+        scatterMode = true;
+        modeSwitches = 0;
 
         //GAMEBOARD BLINK
         if (gameStateTimer == 120 || gameStateTimer == 140 || gameStateTimer == 180
@@ -290,7 +465,7 @@ public class GamePanel extends JPanel implements Runnable
 
         //BACKGROUND, TEXT, GAME BOARD AND PELLETS/FRUITS
         ui.draw(g2, icHandler);
-        if (gameState != GAMEOVER_STATE)
+        if (gameState != GAMEOVER_STATE || (gameState == START_STATE && gameStateTimer >= 60))
         {
             //ITEMS
             itemSpawner.drawItems(g2);
