@@ -13,6 +13,11 @@ public class Pacman extends Entity
 {
 //    GamePanel gp;
     KeyHandler keyH;
+    BufferedImage death1;
+    BufferedImage death2;
+    BufferedImage death3;
+    BufferedImage death4;
+    BufferedImage death5;
 
     /* Pacman constructor */
     public Pacman(GamePanel gp, KeyHandler keyH)
@@ -69,6 +74,12 @@ public class Pacman extends Entity
         right2 = setupImage("PacmanRightClosed", "/pacman/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
         left1 = setupImage("PacmanLeftOpen", "/pacman/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
         left2 = setupImage("PacmanLeftClosed", "/pacman/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+
+        death1 = setupImage("PacmanDeath1", "/pacman/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        death2 = setupImage("PacmanDeath2", "/pacman/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        death3 = setupImage("PacmanDeath3", "/pacman/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        death4 = setupImage("PacmanDeath4", "/pacman/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
+        death5 = setupImage("PacmanDeath5", "/pacman/", gp.displayedTileSize + 8, gp.displayedTileSize + 8);
     }
 
     /* changes pacman direction based on keyboard input and adjusts keyPressed value */
@@ -196,6 +207,50 @@ public class Pacman extends Entity
         if (frightenedPointBonusTimer > 0 || gp.gameState == gp.EATGHOST_STATE)
         {
             image = frightenedPointBonusImage;
+        }
+        /* death animation */
+        else if (gp.gameState == gp.LOSELIFE_STATE)
+        {
+            if (gp.gameStateTimer <= 40)
+            {
+                image = death1;
+            }
+            else if (gp.gameStateTimer <= 50)
+            {
+                image = death2;
+            }
+            else if (gp.gameStateTimer <= 60)
+            {
+                image = death3;
+            }
+            else if (gp.gameStateTimer <= 70)
+            {
+                image = death4;
+            }
+            else if (gp.gameStateTimer <= 80)
+            {
+                image = death5;
+            }
+            else if (gp.gameStateTimer <= 120)
+            {
+                image = null;
+            }
+            else if (gp.gameStateTimer <= 130)
+            {
+                image = death1;
+            }
+            else if (gp.gameStateTimer <= 135)
+            {
+                image = null;
+            }
+            else if (gp.gameStateTimer <= 145)
+            {
+                image = death1;
+            }
+            else if (gp.gameStateTimer >= 155)
+            {
+                image = null;
+            }
         }
         else
         {

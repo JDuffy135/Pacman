@@ -53,6 +53,7 @@ public class GamePanel extends JPanel implements Runnable
     public boolean frightenedMode = false;
     public boolean scatterMode = true;
     public int modeSwitches = 0;
+    public boolean angryBlinky = false;
 
 
     public GamePanel()
@@ -148,6 +149,7 @@ public class GamePanel extends JPanel implements Runnable
             icHandler.pelletsEaten = 0;
             icHandler.score = 0;
             itemSpawner.currentFruit = 3;
+            angryBlinky = false;
         }
         else if (newState == GAMEOVER_STATE)
         {
@@ -173,7 +175,14 @@ public class GamePanel extends JPanel implements Runnable
                 else if (g.equals(Entity.ghosts[3]))
                 {
                     //GHOST SIREN BACKGROUND SOUND
-                    backgroundSounds.setFile(5);
+                    if (angryBlinky == true)
+                    {
+                        backgroundSounds.setFile(6);
+                    }
+                    else
+                    {
+                        backgroundSounds.setFile(5);
+                    }
                     backgroundSounds.play();
                     backgroundSounds.loop();
                     break;
@@ -303,6 +312,19 @@ public class GamePanel extends JPanel implements Runnable
         if (icHandler.score > icHandler.highscore)
         {
             icHandler.highscore = icHandler.score;
+        }
+
+        //ANGRY BLINKY DETECTION
+        if (icHandler.pelletsEaten >= 200 && angryBlinky == false)
+        {
+            angryBlinky = true;
+            if (Entity.frightenedTimer < 1 && (retreatSounds.isRunning() == false))
+            {
+                backgroundSounds.stop();
+                backgroundSounds.setFile(6);
+                backgroundSounds.play();
+                backgroundSounds.loop();
+            }
         }
 
         //SCATTER & CHASE SEQUENCES FOR GHOSTS
@@ -454,6 +476,9 @@ public class GamePanel extends JPanel implements Runnable
         scatterMode = true;
         modeSwitches = 0;
 
+        //ANGRY BLINKY RESET
+        angryBlinky = false;
+
         //GAMEBOARD BLINK
         if (gameStateTimer == 120 || gameStateTimer == 140 || gameStateTimer == 180
                 || gameStateTimer == 200 || gameStateTimer == 240 || gameStateTimer == 260)
@@ -488,7 +513,38 @@ public class GamePanel extends JPanel implements Runnable
 
         //BACKGROUND, TEXT, GAME BOARD AND PELLETS/FRUITS
         ui.draw(g2, icHandler);
-        if (gameState != GAMEOVER_STATE || (gameState == START_STATE && gameStateTimer >= 60))
+        if (gameState == LOSELIFE_STATE)
+        {
+            //ITEMS
+            itemSpawner.drawItems(g2);
+
+            //GHOSTS
+            blinky.draw(g2);
+            pinky.draw(g2);
+            inky.draw(g2);
+            clyde.draw(g2);
+
+            //PLAYER
+            pacman.draw(g2);
+        }
+        else if (gameState == START_STATE)
+        {
+            //ITEMS
+            itemSpawner.drawItems(g2);
+
+            if (gameStateTimer >= 15)
+            {
+                //PLAYER
+                pacman.draw(g2);
+
+                //GHOSTS
+                blinky.draw(g2);
+                pinky.draw(g2);
+                inky.draw(g2);
+                clyde.draw(g2);
+            }
+        }
+        else if (gameState != GAMEOVER_STATE || (gameState == START_STATE && gameStateTimer >= 60))
         {
             //ITEMS
             itemSpawner.drawItems(g2);

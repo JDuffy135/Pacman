@@ -614,7 +614,14 @@ public abstract class Entity
                             else
                             {
                                 /* ghost siren */
-                                gp.backgroundSounds.setFile(5);
+                                if (gp.angryBlinky == true)
+                                {
+                                    gp.backgroundSounds.setFile(6);
+                                }
+                                else
+                                {
+                                    gp.backgroundSounds.setFile(5);
+                                }
                                 gp.backgroundSounds.play();
                                 gp.backgroundSounds.loop();
                                 gp.frightenedSounds.stop();

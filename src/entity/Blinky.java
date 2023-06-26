@@ -161,7 +161,14 @@ public class Blinky extends Entity
                     else if (g.equals(Entity.ghosts[3]))
                     {
                         //GHOST SIREN BACKGROUND SOUND
-                        gp.backgroundSounds.setFile(5);
+                        if (gp.angryBlinky == true)
+                        {
+                            gp.backgroundSounds.setFile(6);
+                        }
+                        else
+                        {
+                            gp.backgroundSounds.setFile(5);
+                        }
                         gp.backgroundSounds.play();
                         gp.backgroundSounds.loop();
                         gp.frightenedSounds.stop();
