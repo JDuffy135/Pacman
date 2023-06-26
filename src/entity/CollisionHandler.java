@@ -112,7 +112,7 @@ public class CollisionHandler extends Entity
         //GHOST COLLISION HANDLING
         for (Entity g : ghosts)
         {
-            if (g != null && g.killHitbox.intersects(entity.hitbox))
+            if (g != null && g.killHitbox.intersects(entity.killHitbox))
             {
                 if (g.ghostState == "frightened")
                 {

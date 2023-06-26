@@ -25,6 +25,8 @@ public class GamePanel extends JPanel implements Runnable
     public CollisionHandler cHandler = new CollisionHandler(this);
     public ItemCollisionHandler icHandler = new ItemCollisionHandler(this);
     public Sound backgroundSounds = new Sound();
+    public Sound frightenedSounds = new Sound();
+    public Sound retreatSounds = new Sound();
     public Sound sfx = new Sound();
     WallSpawner wallSpawner = new WallSpawner(this);
     ItemSpawner itemSpawner = new ItemSpawner(this);
@@ -131,6 +133,8 @@ public class GamePanel extends JPanel implements Runnable
         gameStateTimer = 0;
         backgroundSounds.stop();
         sfx.stop();
+        frightenedSounds.stop();
+        retreatSounds.stop();
 
         /* resets lives and currentLevel if game restarts */
         if (newState == START_STATE && gameState == GAMEOVER_STATE)
@@ -143,6 +147,7 @@ public class GamePanel extends JPanel implements Runnable
             modeSwitches = 0;
             icHandler.pelletsEaten = 0;
             icHandler.score = 0;
+            itemSpawner.currentFruit = 3;
         }
         else if (newState == GAMEOVER_STATE)
         {
@@ -154,10 +159,26 @@ public class GamePanel extends JPanel implements Runnable
         }
         else if (newState == PLAY_STATE)
         {
-            //GHOST SIREN BACKGROUND SOUND
-            backgroundSounds.setFile(5);
-            backgroundSounds.play();
-            backgroundSounds.loop();
+            /* sets sound to ghost retreating if eaten ghosts are on map, and ghost siren otherwise */
+            for (Entity g : Entity.ghosts)
+            {
+                if (g.ghostState == "eaten")
+                {
+                    //GHOST RETREATING SOUND
+                    retreatSounds.setFile(1);
+                    retreatSounds.play();
+                    retreatSounds.loop();
+                    break;
+                }
+                else if (g.equals(Entity.ghosts[3]))
+                {
+                    //GHOST SIREN BACKGROUND SOUND
+                    backgroundSounds.setFile(5);
+                    backgroundSounds.play();
+                    backgroundSounds.loop();
+                    break;
+                }
+            }
         }
         else if (newState == EATGHOST_STATE)
         {
@@ -174,8 +195,8 @@ public class GamePanel extends JPanel implements Runnable
             modeSwitches = 0;
 
             /* death sound */
-            backgroundSounds.setFile(8);
-            backgroundSounds.play();
+            sfx.setFile(8);
+            sfx.play();
 
             /* fruit disappears if present */
             if (itemSpawner.fruitPresent == true)
@@ -243,6 +264,8 @@ public class GamePanel extends JPanel implements Runnable
             backgroundSounds.setFile(9);
             backgroundSounds.play();
             sfx.setFile(10);
+            frightenedSounds.setFile(4);
+            retreatSounds.setFile(1);
         }
 
 //        //CHANGES GAME STATE TO PLAY STATE
@@ -254,7 +277,7 @@ public class GamePanel extends JPanel implements Runnable
 //                changeGameState(PLAY_STATE);
 //            }
 //        }
-        if (gameStateTimer >= 340)
+        if (gameStateTimer >= 320)
         {
             changeGameState(PLAY_STATE);
         }

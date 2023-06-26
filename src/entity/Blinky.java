@@ -28,7 +28,7 @@ public class Blinky extends Entity
         setDefaultValues();
         getImages();
         hitbox = new Rectangle(x, y, gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        killHitbox = new Rectangle(x + 8, y + 8, gp.displayedTileSize - 8, gp.displayedTileSize - 8);
+        killHitbox = new Rectangle(x + 4, y + 4, gp.displayedTileSize - 2, gp.displayedTileSize - 2);
         targetX = x;
         targetY = y;
         movementCooldownTimer = 0;
@@ -52,7 +52,7 @@ public class Blinky extends Entity
         }
         if (this.killHitbox != null)
         {
-            this.killHitbox.setLocation(x + 8, y + 8);
+            this.killHitbox.setLocation(x + 4, y + 4);
         }
 
         this.direction = "left"; /* default: left */
@@ -123,7 +123,7 @@ public class Blinky extends Entity
             {
                 gp.cHandler.checkWallCollision(this);
             }
-            this.moveGhost();
+            this.move();
         }
 
         //TELEPORT CHECKING
@@ -132,6 +132,17 @@ public class Blinky extends Entity
         //FRIGHTENED TIMER CHECKING
         if (frightenedTimer >= 1)
         {
+            if (frightenedTimer == 1)
+            {
+                /* frightened ghost sound */
+                if (gp.frightenedSounds.isRunning() == false)
+                {
+                    gp.frightenedSounds.setFile(4);
+                    gp.frightenedSounds.play();
+                    gp.frightenedSounds.loop();
+                    gp.backgroundSounds.stop();
+                }
+            }
             if (gp.gameState == gp.PLAY_STATE)
             {
                 frightenedTimer++; /* frightenedTimer only incremented during play state */
@@ -140,6 +151,24 @@ public class Blinky extends Entity
             /* turns frightened mode off after 9 seconds */
             if (frightenedTimer >= 540)
             {
+                /* sound reset */
+                for (Entity g : Entity.ghosts)
+                {
+                    if (g.ghostState == "eaten")
+                    {
+                        break;
+                    }
+                    else if (g.equals(Entity.ghosts[3]))
+                    {
+                        //GHOST SIREN BACKGROUND SOUND
+                        gp.backgroundSounds.setFile(5);
+                        gp.backgroundSounds.play();
+                        gp.backgroundSounds.loop();
+                        gp.frightenedSounds.stop();
+                        break;
+                    }
+                }
+
                 frightenedTimer = 0;
                 frightenedPointBonus = 200;
                 frightenedPointBonusImage = pts200;

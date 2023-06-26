@@ -28,7 +28,7 @@ public class Pinky extends Entity
         setDefaultValues();
         getImages();
         hitbox = new Rectangle(x, y, gp.displayedTileSize + 8, gp.displayedTileSize + 8);
-        killHitbox = new Rectangle(x + 8, y + 8, gp.displayedTileSize - 8, gp.displayedTileSize - 8);
+        killHitbox = new Rectangle(x + 4, y + 4, gp.displayedTileSize - 2, gp.displayedTileSize - 2);
         targetX = x;
         targetY = y;
         movementCooldownTimer = 0;
@@ -52,7 +52,7 @@ public class Pinky extends Entity
         }
         if (this.killHitbox != null)
         {
-            this.killHitbox.setLocation(x + 8, y + 8);
+            this.killHitbox.setLocation(x + 4, y + 4);
         }
 
         this.direction = "up"; /* default: up */
@@ -139,7 +139,7 @@ public class Pinky extends Entity
             {
                 gp.cHandler.checkWallCollision(this);
             }
-            this.moveGhost();
+            this.move();
         }
 
         //TELEPORT CHECKING

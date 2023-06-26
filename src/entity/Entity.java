@@ -1,7 +1,6 @@
 package entity;
 
 import main.UtilityTool;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -130,62 +129,29 @@ public abstract class Entity
     }
 
 
-    /* adjusts entity and entity hitbox position based on direction and collisionOn<direction> values */
-    /* pacman only */
+    /* adjusts entity/entity hitbox/entity killHitbox position based on direction and collisionOn<direction> values */
+    /* pacman and ghosts, but overriden in pacman class with different values */
     public void move()
     {
         /* moves entity and entity hitbox if there is no collision */
         if (this.direction == "up" && this.collisionOnUp == false)
         {
             this.y -= this.speed;
-            this.hitbox.setLocation(this.x + hitboxOffset, this.y + hitboxOffset);
         }
         else if (this.direction == "down" && this.collisionOnDown == false)
         {
             this.y += this.speed;
-            this.hitbox.setLocation(this.x + hitboxOffset, this.y + hitboxOffset);
         }
         else if (this.direction == "left" && this.collisionOnLeft == false)
         {
             this.x -= this.speed;
-            this.hitbox.setLocation(this.x + hitboxOffset, this.y + hitboxOffset);
         }
         else if (this.direction == "right" && this.collisionOnRight == false)
         {
             this.x += this.speed;
-            this.hitbox.setLocation(this.x + hitboxOffset, this.y + hitboxOffset);
         }
-    }
-
-    /* adjusts ghost, ghost hitbox, and ghost killHitbox position based on direction and collisionOn<direction> values */
-    /* ghosts only */
-    public void moveGhost()
-    {
-        /* moves entity and entity hitbox if there is no collision */
-        if (this.direction == "up" && this.collisionOnUp == false)
-        {
-            this.y -= this.speed;
-            this.hitbox.setLocation(this.x + hitboxOffset, this.y + hitboxOffset);
-            this.killHitbox.setLocation(this.x + 8, this.y + 8);
-        }
-        else if (this.direction == "down" && this.collisionOnDown == false)
-        {
-            this.y += this.speed;
-            this.hitbox.setLocation(this.x + hitboxOffset, this.y + hitboxOffset);
-            this.killHitbox.setLocation(this.x + 8, this.y + 8);
-        }
-        else if (this.direction == "left" && this.collisionOnLeft == false)
-        {
-            this.x -= this.speed;
-            this.hitbox.setLocation(this.x + hitboxOffset, this.y + hitboxOffset);
-            this.killHitbox.setLocation(this.x + 8, this.y + 8);
-        }
-        else if (this.direction == "right" && this.collisionOnRight == false)
-        {
-            this.x += this.speed;
-            this.hitbox.setLocation(this.x + hitboxOffset, this.y + hitboxOffset);
-            this.killHitbox.setLocation(this.x + 8, this.y + 8);
-        }
+        this.hitbox.setLocation(this.x + hitboxOffset, this.y + hitboxOffset);
+        this.killHitbox.setLocation(this.x + 4, this.y + 4);
     }
 
     /* teleports entity to other side when traversing pipe thingies */
@@ -627,6 +593,37 @@ public abstract class Entity
                 flipDirection();
                 break;
             case "idleExit":
+                if (this.ghostState == "eaten")
+                {
+                    for (Entity g : Entity.ghosts)
+                    {
+                        if (g.ghostState == "eaten" && (g.equals(this) == false))
+                        {
+                            break;
+                        }
+                        else if (g.equals(Entity.ghosts[3]))
+                        {
+                            if (frightenedTimer >= 1)
+                            {
+                                /* frightened ghost sound */
+                                gp.frightenedSounds.setFile(4);
+                                gp.frightenedSounds.play();
+                                gp.frightenedSounds.loop();
+                                gp.backgroundSounds.stop();
+                            }
+                            else
+                            {
+                                /* ghost siren */
+                                gp.backgroundSounds.setFile(5);
+                                gp.backgroundSounds.play();
+                                gp.backgroundSounds.loop();
+                                gp.frightenedSounds.stop();
+                            }
+                            gp.retreatSounds.stop();
+                            break;
+                        }
+                    }
+                }
                 this.speed = 1;
                 this.ghostState = "idleExit";
                 this.wallImmunity = true;

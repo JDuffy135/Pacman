@@ -33,6 +33,7 @@ public class Pacman extends Entity
         setDefaultValues();
         getImages();
         hitbox = new Rectangle(x, y, hitboxSize, hitboxSize);
+        killHitbox = new Rectangle(x + 8, y + 8, gp.displayedTileSize - 8, gp.displayedTileSize - 8);
     }
 
     /* sets default values for pacman if this wasn't self-evident */
@@ -46,6 +47,10 @@ public class Pacman extends Entity
         if (this.hitbox != null)
         {
             this.hitbox.setLocation(this.x, this.y);
+        }
+        if (this.killHitbox != null)
+        {
+            this.killHitbox.setLocation(x + 8, y + 8);
         }
 
         this.direction = "stationary";
@@ -110,6 +115,30 @@ public class Pacman extends Entity
         {
             this.direction = "stationary";
         }
+    }
+
+    @Override
+    public void move()
+    {
+        /* moves entity and entity hitbox if there is no collision */
+        if (this.direction == "up" && this.collisionOnUp == false)
+        {
+            this.y -= this.speed;
+        }
+        else if (this.direction == "down" && this.collisionOnDown == false)
+        {
+            this.y += this.speed;
+        }
+        else if (this.direction == "left" && this.collisionOnLeft == false)
+        {
+            this.x -= this.speed;
+        }
+        else if (this.direction == "right" && this.collisionOnRight == false)
+        {
+            this.x += this.speed;
+        }
+        this.hitbox.setLocation(this.x + hitboxOffset, this.y + hitboxOffset);
+        this.killHitbox.setLocation(this.x + 8, this.y + 8);
     }
 
 
@@ -220,5 +249,6 @@ public class Pacman extends Entity
 
         /* hitbox visualizer - delete eventually */
 //        g2.draw3DRect(this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height, true);
+//        g2.draw3DRect(this.killHitbox.x, this.killHitbox.y, this.killHitbox.width, this.killHitbox.height, true);
     }
 }

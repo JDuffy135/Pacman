@@ -52,4 +52,9 @@ public class Sound
     {
         clip.stop();
     }
+
+    public boolean isRunning()
+    {
+        return clip.isRunning();
+    }
 }
