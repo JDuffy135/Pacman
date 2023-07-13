@@ -134,8 +134,10 @@ public class Blinky extends Entity
         {
             if (frightenedTimer == 1)
             {
-                /* frightened ghost sound */
-                if (gp.frightenedSounds.isRunning() == false)
+                /* frightened ghost sound if none of the ghosts are in eaten state */
+                if (gp.frightenedSounds.isRunning() == false &&
+                        (ghosts[0].ghostState != "eaten" && ghosts[1].ghostState != "eaten" &&
+                                ghosts[2].ghostState != "eaten" && ghosts[3].ghostState != "eaten"))
                 {
                     gp.frightenedSounds.setFile(4);
                     gp.frightenedSounds.play();

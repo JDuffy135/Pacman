@@ -73,25 +73,5 @@ public class KeyHandler implements KeyListener
     @Override
     public void keyReleased(KeyEvent e)
     {
-        /* NOTE: originally had push-and-hold movement mechanics */
-
-//        int code = e.getKeyCode();
-//
-//        if (code == KeyEvent.VK_W) //up
-//        {
-//            upPressed = false;
-//        }
-//        if (code == KeyEvent.VK_S) //down
-//        {
-//            downPressed = false;
-//        }
-//        if (code == KeyEvent.VK_A) //left
-//        {
-//            leftPressed = false;
-//        }
-//        if (code == KeyEvent.VK_D) //right
-//        {
-//            rightPressed = false;
-//        }
     }
 }
