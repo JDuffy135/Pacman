@@ -2,6 +2,9 @@ package main;
 
 import javax.swing.JPanel;
 import java.awt.*;
+import java.io.*;
+import java.util.Scanner;
+
 import entity.*;
 import item.ItemCollisionHandler;
 import item.ItemSpawner;
@@ -54,6 +57,10 @@ public class GamePanel extends JPanel implements Runnable
     public boolean scatterMode = true;
     public int modeSwitches = 0;
     public boolean angryBlinky = false;
+
+    //HIGHSCORE UPDATING
+    BufferedReader fileReader;
+    BufferedWriter fileWriter;
 
 
     public GamePanel()
@@ -129,8 +136,7 @@ public class GamePanel extends JPanel implements Runnable
     }
 
     /* use this whenever changing game state */
-    public void changeGameState(int newState)
-    {
+    public void changeGameState(int newState) {
         gameStateTimer = 0;
         backgroundSounds.stop();
         sfx.stop();
@@ -214,6 +220,26 @@ public class GamePanel extends JPanel implements Runnable
             }
         }
 
+        if (gameState == WIN_STATE || gameState == LOSELIFE_STATE || gameState == GAMEOVER_STATE)
+        {
+            /* updates local highscore file if necessary */
+            try {
+                fileReader = new BufferedReader(new FileReader("./src/main/highscore.txt"));
+                if (Integer.parseInt(fileReader.readLine()) < icHandler.highscore)
+                {
+                    fileWriter = new BufferedWriter(new FileWriter("./src/main/highscore.txt"));
+                    fileWriter.write(String.valueOf(icHandler.highscore));
+                    fileWriter.flush();
+                    fileWriter.close();
+                }
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+                File test = new File("./");
+                System.out.println("DIRECTORY: " + test.getAbsolutePath());
+            }
+        }
+
         gameState = newState;
     }
 
@@ -268,6 +294,18 @@ public class GamePanel extends JPanel implements Runnable
             pinky.setDefaultValues();
             inky.setDefaultValues();
             clyde.setDefaultValues();
+
+            //HIGHSCORE SETUP
+            try {
+                fileReader = new BufferedReader(new FileReader("./src/main/highscore.txt"));
+                icHandler.highscore = Integer.parseInt(fileReader.readLine());
+                fileReader.close();
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+                File test = new File("./");
+                System.out.println("DIRECTORY: " + test.getAbsolutePath());
+            }
 
             //STARTUP SOUND & DEFAULT SFX VALUE
             backgroundSounds.setFile(9);

@@ -231,23 +231,23 @@ public class Pacman extends Entity
             {
                 image = death5;
             }
-            else if (gp.gameStateTimer <= 120)
+            else if (gp.gameStateTimer <= 100)
             {
                 image = null;
             }
-            else if (gp.gameStateTimer <= 130)
+            else if (gp.gameStateTimer <= 110)
             {
                 image = death1;
             }
-            else if (gp.gameStateTimer <= 135)
+            else if (gp.gameStateTimer <= 115)
             {
                 image = null;
             }
-            else if (gp.gameStateTimer <= 145)
+            else if (gp.gameStateTimer <= 125)
             {
                 image = death1;
             }
-            else if (gp.gameStateTimer >= 155)
+            else if (gp.gameStateTimer >= 135)
             {
                 image = null;
             }
