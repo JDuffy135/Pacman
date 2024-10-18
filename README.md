@@ -1,6 +1,6 @@
 # Pacman Remake
 
-![pacman](https://github.com/user-attachments/assets/f3da0112-3fae-4965-9f0a-6d51c44dfec9)
+![pacman_low_res](https://github.com/user-attachments/assets/95af5bd5-c94c-4c8a-993f-a69d3e88c198)
 
 This is my first ever application built from scratch!
 
