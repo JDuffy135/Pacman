@@ -1,4 +1,7 @@
 # Pacman Remake
+
+![pacman](https://github.com/user-attachments/assets/f3da0112-3fae-4965-9f0a-6d51c44dfec9)
+
 This is my first ever application built from scratch!
 
 I decided to build the app using pure Java code, as that's the only language I was fully comfortable with at the time.
